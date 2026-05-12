@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rewire — Subconscious Engineering</title>
+  <meta name="description" content="Rewire your subconscious. Engineer your reality.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --white: #f0f0f0;
+      --dim: #666;
+      --faint: #333;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #000;
+      color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Sections */
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem 2rem;
+      position: relative;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1.2s ease forwards 0.3s;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 0.6s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-sub {
+      margin-top: 2.5rem;
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      color: var(--dim);
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards 1s;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.8s;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--dim), transparent);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    /* Manifesto sections */
+    .manifesto-block {
+      max-width: 680px;
+      text-align: center;
+    }
+
+    .manifesto-block .number {
+      font-size: 0.65rem;
+      letter-spacing: 0.5em;
+      color: var(--faint);
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+    }
+
+    .manifesto-block h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      line-height: 1.3;
+      margin-bottom: 2rem;
+      letter-spacing: -0.01em;
+    }
+
+    .manifesto-block p {
+      font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+      line-height: 1.85;
+      color: var(--dim);
+      font-weight: 200;
+    }
+
+    /* Divider */
+    .divider {
+      width: 1px;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--faint), transparent);
+      margin: 0 auto;
+    }
+
+    /* Statement */
+    .statement {
+      text-align: center;
+      max-width: 900px;
+    }
+
+    .statement h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .statement h2 em {
+      font-style: italic;
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+    }
+
+    .cta-section p {
+      font-size: clamp(0.9rem, 1.3vw, 1rem);
+      color: var(--dim);
+      font-weight: 200;
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    .cta-link {
+      display: inline-block;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border: 1px solid var(--faint);
+      transition: all 0.5s ease;
+    }
+
+    .cta-link:hover {
+      border-color: var(--dim);
+      background: rgba(255, 255, 255, 0.03);
+      letter-spacing: 0.45em;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-brand {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--faint);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--dim);
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--faint);
+      font-weight: 200;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      section {
+        padding: 3rem 1.5rem;
+      }
+      .divider {
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-label">Subconscious Engineering</p>
+    <h1>Rewire your<br>deepest <em>code</em></h1>
+    <p class="hero-sub">The architecture beneath thought</p>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Manifesto -->
+  <div class="divider reveal"></div>
+
+  <section>
+    <div class="manifesto-block reveal">
+      <p class="number">001</p>
+      <h2>Your beliefs are software.<br>Most of it was installed<br>before you could speak.</h2>
+      <p>Every pattern you repeat, every limit you accept, every story you tell yourself — it was written into your subconscious by the age of seven. You didn't choose it. You inherited it.</p>
+    </div>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <section>
+    <div class="manifesto-block reveal">
+      <p class="number">002</p>
+      <h2>You don't need<br>more motivation.<br>You need different wiring.</h2>
+      <p>Willpower is a surface-level hack. It fights the current of your subconscious programming. We don't fight the current. We change where the river flows.</p>
+    </div>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <section>
+    <div class="manifesto-block reveal">
+      <p class="number">003</p>
+      <h2>The subconscious doesn't<br>understand words.<br>It understands <em>frequency.</em></h2>
+      <p>Affirmations fail because they speak the wrong language. The subconscious operates on feeling, imagery, and repetition — beneath the threshold of conscious awareness. That's where we work.</p>
+    </div>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <section>
+    <div class="manifesto-block reveal">
+      <p class="number">004</p>
+      <h2>Identity shifts before<br>reality does.</h2>
+      <p>You cannot outperform your self-image. Change the internal blueprint and the external world reorganizes to match. This is not philosophy. This is engineering.</p>
+    </div>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <section>
+    <div class="manifesto-block reveal">
+      <p class="number">005</p>
+      <h2>We build tools<br>for the invisible layer.</h2>
+      <p>Rewire exists to give you access to the operating system running beneath your thoughts. Precise. Deliberate. Measurable. Subconscious engineering — not self-help.</p>
+    </div>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <!-- Closing statement -->
+  <section>
+    <div class="statement reveal">
+      <h2>The mission is simple.<br>Reprogram the default.<br><em>Become the architect.</em></h2>
+    </div>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="reveal">
+      <p>Something is being built.</p>
+      <a href="mailto:team@rewiremission.com" class="cta-link">Get in touch</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-brand">Rewire</p>
+    <div class="footer-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="mailto:team@rewiremission.com">Contact</a>
+    </div>
+    <p class="footer-copy">&copy; 2025 Kramer Ventures GmbH. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
