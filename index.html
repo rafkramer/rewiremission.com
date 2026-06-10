@@ -66,27 +66,35 @@
     .drift .a {
       width: 72vmax; height: 56vmax;
       left: -20%; top: -24%;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(28, 25, 80, 0.55), transparent 70%);
-      animation: driftA 90s ease-in-out infinite alternate;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(37, 32, 110, 0.62), transparent 70%);
+      animation: driftA 55s ease-in-out infinite alternate;
     }
 
     .drift .b {
       width: 62vmax; height: 50vmax;
       right: -20%; bottom: -22%;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(46, 33, 102, 0.45), transparent 70%);
-      animation: driftB 110s ease-in-out infinite alternate;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(61, 42, 138, 0.52), transparent 70%);
+      animation: driftB 70s ease-in-out infinite alternate;
     }
 
     .drift .c {
       width: 40vmax; height: 32vmax;
       left: 2%; bottom: -14%;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(38, 88, 98, 0.22), transparent 70%);
-      animation: driftC 70s ease-in-out infinite alternate;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(48, 116, 128, 0.30), transparent 70%);
+      animation: driftC 45s ease-in-out infinite alternate;
     }
 
-    @keyframes driftA { to { transform: translate(7%, 10%) scale(1.15); } }
-    @keyframes driftB { to { transform: translate(-8%, -8%) scale(1.1); } }
-    @keyframes driftC { to { transform: translate(10%, -10%) scale(1.18); } }
+    .drift .d {
+      width: 34vmax; height: 28vmax;
+      right: 2%; top: -12%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(134, 216, 223, 0.10), transparent 70%);
+      animation: driftD 60s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftA { to { transform: translate(9%, 12%) scale(1.18); } }
+    @keyframes driftB { to { transform: translate(-10%, -10%) scale(1.12); } }
+    @keyframes driftC { to { transform: translate(13%, -12%) scale(1.2); } }
+    @keyframes driftD { to { transform: translate(-12%, 14%) scale(1.15); } }
 
     /* film grain */
     body::after {
@@ -193,8 +201,10 @@
     /* the word arrives like a thought coming into focus */
     .word {
       position: absolute;
-      left: 0; right: 0; top: 0;
-      text-align: center;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       white-space: nowrap;
       opacity: 0;
       transform: translateY(0.3em) scale(0.985);
@@ -251,21 +261,58 @@
     .word.any.show i::after { transform: scaleX(1); }
     .word.any.out i::after { opacity: 0; }
 
+    /* longer phrases step down so they never overflow the line */
+    .word.w-m { font-size: 0.82em; }
+    .word.w-s { font-size: 0.64em; }
+
     .cue {
       position: absolute;
-      bottom: max(3rem, env(safe-area-inset-bottom));
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: max(2.7rem, env(safe-area-inset-bottom));
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .cue-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.34em;
+      text-indent: 0.34em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.55);
+    }
+
+    /* a pulse of light travels down the track */
+    .cue-track {
+      position: relative;
       width: 1px;
-      height: 44px;
-      background: linear-gradient(to bottom, var(--ink-faint), transparent);
-      animation: cue 3s ease-in-out infinite;
+      height: 52px;
+      background: rgba(235, 235, 235, 0.14);
+      overflow: hidden;
+    }
+
+    .cue-track::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -18px;
+      width: 1px;
+      height: 18px;
+      background: linear-gradient(to bottom, transparent, rgba(199, 208, 244, 0.95));
+      animation: cue 2.4s cubic-bezier(0.45, 0, 0.3, 1) infinite;
     }
 
     @keyframes cue {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
+      0% { transform: translateY(0); opacity: 0; }
+      25% { opacity: 1; }
+      72%, 100% { transform: translateY(70px); opacity: 0; }
     }
+
+    /* once reading begins the cue has done its job */
+    .js .hero.in .cue.gone { opacity: 0; transition-delay: 0s; }
 
 .js .rise {
       opacity: 0;
@@ -314,9 +361,11 @@
     /* the signature — written by hand, signed when you reach it */
     .blob .sig {
       font-family: 'Mrs Saint Delafield', cursive;
-      font-size: 2em;
+      font-size: 2.3em;
       line-height: 1.25;
-      color: rgba(235, 235, 235, 0.92);
+      color: rgba(248, 248, 250, 0.97);
+      -webkit-text-stroke: 0.45px rgba(248, 248, 250, 0.85);
+      text-shadow: 0 0 22px rgba(150, 170, 240, 0.3);
       margin-top: 1.1em;
       transform: rotate(-2.5deg);
       transform-origin: left center;
@@ -368,11 +417,35 @@
       max-width: 30em;
     }
 
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      margin-top: 3rem;
+    }
+
+    .ghost {
+      display: inline-flex;
+      align-items: center;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.98rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      padding: 1.05rem 2.2rem;
+      border: 1px solid rgba(235, 235, 235, 0.22);
+      border-radius: 999px;
+      transition: border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+    .ghost:hover { border-color: rgba(235, 235, 235, 0.5); color: var(--ink-bright); }
+    .ghost:active { transform: scale(0.985); }
+
     .store {
       display: inline-flex;
       align-items: center;
       gap: 0.7rem;
-      margin-top: 3rem;
       background: #ECEBE9;
       color: #0D0D0D;
       text-decoration: none;
@@ -437,7 +510,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .halo .core, .cue, .word, .drift i { animation: none; }
+      .halo .core, .cue-track::after, .word, .drift i { animation: none; }
       .word { transition: none; }
       .word.any i::after { transform: scaleX(1); transition: none; }
       .js .blob .sig { clip-path: none; transition: none; }
@@ -449,7 +522,7 @@
 </head>
 <body>
 
-  <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+  <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
   <div class="halo" id="halo" aria-hidden="true"><div class="core"></div></div>
 
   <a class="corner brand" href="/">Rewire</a>
@@ -463,18 +536,15 @@
       <h1 class="rise d1">Rewire your mind<br>
         <span class="rotator" id="rotator"><span class="word show any"><i>for anything.</i></span></span>
       </h1>
-      <div class="cue rise d2" aria-hidden="true"></div>
+      <div class="cue rise d2" aria-hidden="true"><span class="cue-label">Scroll</span><span class="cue-track"></span></div>
     </header>
 
     <!-- ============ The manifesto ============ -->
     <section class="manifesto">
       <p class="label rise">Our manifesto</p>
       <div class="blob" id="blob">
-        <p>Your mind runs on software you never wrote. Habits, fears, the story of who you are — installed early, by repetition and accident. None of it chosen.</p>
-        <p>You've tried to rewrite it with willpower. But willpower steers about 5% of you. The other 95% runs beneath awareness, where the patterns actually live.</p>
-        <p>And the deep mind doesn't argue. <em>It listens.</em> To voice, to imagery, to repetition — in the quiet states where it can actually be reached. So that is the language we write in.</p>
-        <p>Clinical hypnotherapy. Cognitive behavioral therapy. Neural audio engineering. One signal, written word by word, for one mind only — yours.</p>
-        <p>Each listen retraces the new pathway a little deeper, until the new pattern stops being practice and starts being you. <em>Repetition rewires.</em></p>
+        <p>Your mind runs on software you never wrote — habits, fears, the story of who you are, installed by repetition and accident. None of it chosen.</p>
+        <p>Willpower steers about 5% of you. The other 95% only listens in the quiet states — so that is where we write: clinical hypnotherapy, CBT and neural audio, composed word by word for one mind. <em>Yours.</em></p>
         <p>We're building Rewire to give every mind the tools to rewrite itself — so who you become is chosen, not inherited.</p>
         <p>This is not self-help. <em>This is mind engineering.</em></p>
         <span class="sig-watch" aria-hidden="true"></span>
@@ -485,12 +555,15 @@
     <!-- ============ Download ============ -->
     <section class="download">
       <div class="inwrap">
-        <h2 class="rise">Try Rewire for free.</h2>
-        <!-- TODO: replace with the real App Store URL when live -->
-        <a class="store rise d1" href="https://apps.apple.com/app/rewire" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.03 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702"/></svg>
-          Download for iPhone
-        </a>
+        <h2 class="rise">Take control with Rewire</h2>
+        <div class="cta-row rise d1">
+          <!-- TODO: replace with the real App Store URL when live -->
+          <a class="store" href="https://apps.apple.com/app/rewire" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.03 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702"/></svg>
+            Pre-order now
+          </a>
+          <a class="ghost" href="mailto:team@rewiremission.com?subject=Early%20access%20to%20Rewire">Request early access</a>
+        </div>
         <p class="legal rise d2">
           <a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><a href="mailto:team@rewiremission.com">Contact</a>
         </p>
@@ -509,11 +582,16 @@
     /* ---------- rotating word (the app's welcome line) ----------
        Every 5th word is "for anything." — underlined, the promise. */
     const words = [
-      'for sleep.', 'for focus.', 'for confidence.', 'for calm.',
-      'for clarity.', 'for discipline.', 'for deep work.', 'for healing.',
-      'for letting go.', 'for presence.', 'for courage.', 'for stillness.',
-      'for self-belief.', 'for new habits.', 'for peace.', 'for strength.',
-      'for energy.', 'for purpose.'
+      'for sleep.', 'to perform.', 'for focus.', 'to quit smoking.',
+      'for confidence.', 'to stop overthinking.', 'for calm.', 'to drink less.',
+      'for clarity.', 'to get over your ex.', 'for discipline.', 'to eat better.',
+      'for deep work.', 'to stop procrastinating.', 'for healing.', 'to wake up earlier.',
+      'for letting go.', 'to speak up.', 'for presence.', 'to train harder.',
+      'for courage.', 'to get over cigarettes.', 'for stillness.', 'to trust yourself.',
+      'for self-belief.', 'to stop doomscrolling.', 'for new habits.', 'to handle pressure.',
+      'for peace.', 'to say no.', 'for strength.', 'to start over.',
+      'for energy.', 'to forgive.', 'for purpose.', 'to slow down.',
+      'for grit.', 'to show up.', 'for patience.', 'to move on.'
     ];
     const rot = document.getElementById('rotator');
     if (rot && !reduced) {
@@ -532,6 +610,9 @@
         nw.className = isAny ? 'word any' : 'word';
         const inner = document.createElement('i');
         inner.textContent = isAny ? 'for anything.' : words[i = (i + 1) % words.length];
+        const len = inner.textContent.length;
+        if (len > 19) nw.classList.add('w-s');
+        else if (len > 15) nw.classList.add('w-m');
         nw.appendChild(inner);
         rot.appendChild(nw);
         requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -635,12 +716,14 @@
 
     /* ---------- the halo dims while you read, returns at the end ---------- */
     const halo = document.getElementById('halo');
+    const cue = document.querySelector('.cue');
     let hTick = false;
     const setScrollUI = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
       const o = 0.45 + 0.55 * Math.abs(Math.cos(p * Math.PI));
       halo.style.opacity = o.toFixed(3);
+      if (cue) cue.classList.toggle('gone', window.scrollY > 60);
     };
     window.addEventListener('scroll', () => {
       if (hTick) return;
