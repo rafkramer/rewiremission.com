@@ -202,10 +202,6 @@
         transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1),
         opacity 0.7s ease,
         filter 0.75s ease;
-      background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 50%, #9FB3ED 90%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
       filter: blur(12px) drop-shadow(0 0 24px rgba(150, 170, 240, 0));
     }
 
@@ -221,13 +217,39 @@
       filter: blur(12px) drop-shadow(0 0 24px rgba(150, 170, 240, 0));
     }
 
-    /* "for anything." — the promise, underlined */
-    .word.any {
-      text-decoration: underline;
-      text-decoration-thickness: 0.045em;
-      text-underline-offset: 0.12em;
-      text-decoration-color: rgba(159, 179, 237, 0.6);
+    /* the gradient lives on the element that holds the text —
+       background-clip: text does not reach into an inline-block child */
+    .word i {
+      font-style: inherit;
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 50%, #9FB3ED 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
+
+    /* "for anything." — the promise; its underline draws itself in
+       once the word has settled into focus */
+    .word.any i::after {
+      content: '';
+      position: absolute;
+      left: 0.05em;
+      right: 0.12em;
+      bottom: -0.07em;
+      height: 0.045em;
+      border-radius: 1em;
+      background: linear-gradient(90deg,
+        rgba(159, 179, 237, 0),
+        rgba(159, 179, 237, 0.62) 22%,
+        rgba(159, 179, 237, 0.62) 78%,
+        rgba(159, 179, 237, 0));
+      transform: scaleX(0);
+      transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s, opacity 0.35s ease;
+    }
+
+    .word.any.show i::after { transform: scaleX(1); }
+    .word.any.out i::after { opacity: 0; }
 
     .cue {
       position: absolute;
@@ -245,42 +267,7 @@
       50% { opacity: 1; }
     }
 
-    /* ============ Scroll indicator ============ */
-    .progress {
-      position: fixed;
-      right: clamp(1.2rem, 4vw, 2.4rem);
-      top: 50%;
-      transform: translateY(-50%);
-      height: 34vh;
-      width: 1px;
-      background: rgba(255, 255, 255, 0.09);
-      z-index: 55;
-      pointer-events: none;
-    }
-
-    .progress .bar {
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(235, 235, 235, 0.55);
-      transform: scaleY(0);
-      transform-origin: top center;
-    }
-
-    .progress .dot {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--ink-bright);
-      box-shadow: 0 0 10px rgba(242, 241, 239, 0.4);
-      transform: translate(-50%, -50%);
-    }
-
-    .js .rise {
+.js .rise {
       opacity: 0;
       transform: translateY(20px);
       filter: blur(8px);
@@ -343,6 +330,8 @@
     .js .blob .sig.signed {
       clip-path: inset(-25% -8% -25% -2%);
     }
+
+    .sig-watch { display: block; height: 1px; }
 
     /* words brighten as you read */
     .js .blob .w { opacity: 0.22; transition: opacity 0.7s ease; }
@@ -439,7 +428,6 @@
       .manifesto .label { margin-bottom: 4.5rem; }
       .blob { font-size: 1.36rem; line-height: 1.68; }
       .corner { top: 1.5rem; }
-      .progress { height: 23vh; right: 0.85rem; }
       .download { min-height: 88svh; }
       .legal { line-height: 2.3; }
     }
@@ -451,6 +439,8 @@
     @media (prefers-reduced-motion: reduce) {
       .halo .core, .cue, .word, .drift i { animation: none; }
       .word { transition: none; }
+      .word.any i::after { transform: scaleX(1); transition: none; }
+      .js .blob .sig { clip-path: none; transition: none; }
       .js .rise { opacity: 1; transform: none; transition: none; }
       .js .blob .w { opacity: 1 !important; transition: none; }
       .halo { transition: none; }
@@ -465,15 +455,13 @@
   <a class="corner brand" href="/">Rewire</a>
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
-  <div class="progress" aria-hidden="true"><span class="bar" id="pbar"></span><span class="dot" id="pdot"></span></div>
-
   <main>
 
     <!-- ============ Hero ============ -->
     <header class="hero">
       <p class="eyebrow rise">Mind engineering</p>
       <h1 class="rise d1">Rewire your mind<br>
-        <span class="rotator" id="rotator"><span class="word show any">for anything.</span></span>
+        <span class="rotator" id="rotator"><span class="word show any"><i>for anything.</i></span></span>
       </h1>
       <div class="cue rise d2" aria-hidden="true"></div>
     </header>
@@ -489,6 +477,7 @@
         <p>Each listen retraces the new pathway a little deeper, until the new pattern stops being practice and starts being you. <em>Repetition rewires.</em></p>
         <p>We're building Rewire to give every mind the tools to rewrite itself — so who you become is chosen, not inherited.</p>
         <p>This is not self-help. <em>This is mind engineering.</em></p>
+        <span class="sig-watch" aria-hidden="true"></span>
         <p class="sig">Rewire Team</p>
       </div>
     </section>
@@ -500,7 +489,7 @@
         <!-- TODO: replace with the real App Store URL when live -->
         <a class="store rise d1" href="https://apps.apple.com/app/rewire" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.03 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702"/></svg>
-          Download Rewire
+          Download for iPhone
         </a>
         <p class="legal rise d2">
           <a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><a href="mailto:team@rewiremission.com">Contact</a>
@@ -530,29 +519,31 @@
     if (rot && !reduced) {
       let i = -1;     // position in the words list
       let n = 0;      // displays since load (markup starts on "for anything.")
-      setInterval(() => {
+      const DWELL = 3200, DWELL_ANY = 4400;
+      let dwell = DWELL_ANY; // the opening "for anything." lingers
+      const swap = () => {
+        setTimeout(swap, dwell);
         if (document.hidden) return;
         const olds = Array.from(rot.querySelectorAll('.word'));
         n++;
         const isAny = n % 5 === 4;
+        dwell = isAny ? DWELL_ANY : DWELL;
         const nw = document.createElement('span');
         nw.className = isAny ? 'word any' : 'word';
-        if (isAny) {
-          nw.textContent = 'for anything.';
-        } else {
-          i = (i + 1) % words.length;
-          nw.textContent = words[i];
-        }
+        const inner = document.createElement('i');
+        inner.textContent = isAny ? 'for anything.' : words[i = (i + 1) % words.length];
+        nw.appendChild(inner);
         rot.appendChild(nw);
         requestAnimationFrame(() => requestAnimationFrame(() => {
           nw.classList.add('show');
           olds.forEach(o => {
             o.classList.remove('show');
             o.classList.add('out');
-            setTimeout(() => o.remove(), 700);
+            setTimeout(() => o.remove(), 800);
           });
         }));
-      }, 3200);
+      };
+      setTimeout(swap, dwell);
     }
 
     /* ---------- soft entrances ---------- */
@@ -569,9 +560,13 @@
     }, { threshold: 0.25 });
     document.querySelectorAll('.manifesto, .download').forEach(c => io.observe(c));
 
-    /* the signature signs itself when you reach it */
+    /* the signature signs itself when you reach it.
+       NOTE: we observe a sentinel above it — the signature itself is
+       clipped to zero width pre-reveal, so Chrome reports its
+       intersection ratio as 0 and an observer on it would never fire. */
     const sig = document.querySelector('.sig');
-    if (sig) {
+    const sigWatch = document.querySelector('.sig-watch');
+    if (sig && sigWatch) {
       const sio = new IntersectionObserver(es => {
         es.forEach(e => {
           if (e.isIntersecting) {
@@ -579,8 +574,8 @@
             sio.disconnect();
           }
         });
-      }, { threshold: 0.6 });
-      sio.observe(sig);
+      }, { rootMargin: '0px 0px -12% 0px' });
+      sio.observe(sigWatch);
     }
 
     /* ---------- the manifesto brightens as you read ---------- */
@@ -638,18 +633,14 @@
       measure();
     }
 
-    /* ---------- halo dims while you read; scroll indicator fills ---------- */
+    /* ---------- the halo dims while you read, returns at the end ---------- */
     const halo = document.getElementById('halo');
-    const pbar = document.getElementById('pbar');
-    const pdot = document.getElementById('pdot');
     let hTick = false;
     const setScrollUI = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
       const o = 0.45 + 0.55 * Math.abs(Math.cos(p * Math.PI));
       halo.style.opacity = o.toFixed(3);
-      pbar.style.transform = 'scaleY(' + p.toFixed(4) + ')';
-      pdot.style.top = (p * 100).toFixed(2) + '%';
     };
     window.addEventListener('scroll', () => {
       if (hTick) return;
