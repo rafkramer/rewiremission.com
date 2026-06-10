@@ -2,139 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Privacy Policy — Rewire</title>
+  <meta name="description" content="Privacy policy for Rewire (rewiremission.com), operated by Kramer Ventures GmbH.">
+  <meta name="theme-color" content="#020203">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020203'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:wght@400&display=swap');
+    :root {
+      --bg: #020203;
+      --ink-bright: #F2F1EF;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #000;
-      color: #f0f0f0;
-      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: rgba(235, 235, 235, 0.68);
+      font-family: var(--sans);
       font-weight: 300;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    ::selection { background: rgba(255,255,255,0.15); color: #fff; }
+    ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
 
-    nav {
-      padding: 2rem;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(65% 50% at 12% 0%, rgba(28, 25, 80, 0.34), transparent 70%),
+        radial-gradient(55% 45% at 92% 100%, rgba(46, 33, 102, 0.26), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
     }
 
-    nav a {
-      color: #444;
-      text-decoration: none;
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .corner {
+      position: fixed;
+      top: 1.9rem;
+      z-index: 60;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
-      transition: color 0.3s ease;
+      text-decoration: none;
+      color: rgba(235, 235, 235, 0.55);
+      transition: color 0.4s ease;
     }
+    .corner:hover { color: var(--ink-bright); }
+    .corner.brand { left: clamp(1.5rem, 5vw, 3rem); color: rgba(235, 235, 235, 0.68); }
+    .corner.contact { right: clamp(1.5rem, 5vw, 3rem); }
 
-    nav a:hover { color: #888; }
+    a:focus-visible { outline: 1px solid rgba(235, 235, 235, 0.42); outline-offset: 4px; }
 
-    .container {
-      max-width: 640px;
+    .page {
+      max-width: 41em;
       margin: 0 auto;
-      padding: 4rem 2rem 8rem;
+      padding: 9.5rem clamp(1.5rem, 6vw, 2rem) 5rem;
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--serif);
       font-weight: 400;
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
-      margin-bottom: 0.8rem;
-      letter-spacing: -0.02em;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink-bright);
+      margin-bottom: 1rem;
     }
 
-    .last-updated {
-      font-size: 0.75rem;
-      color: #444;
-      letter-spacing: 0.1em;
-      margin-bottom: 3.5rem;
+    .updated {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.5);
+      margin-bottom: 3.6rem;
     }
 
     h2 {
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 0.85rem;
-      letter-spacing: 0.15em;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      margin-top: 3rem;
-      margin-bottom: 1rem;
-      color: #999;
+      color: rgba(235, 235, 235, 0.8);
+      margin: 3rem 0 1rem;
     }
 
     p {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: #777;
-      font-weight: 200;
+      font-size: 1rem;
+      line-height: 1.85;
       margin-bottom: 1rem;
+      text-wrap: pretty;
     }
 
-    a { color: #999; }
+    .page a {
+      color: rgba(235, 235, 235, 0.85);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(255, 255, 255, 0.25);
+      transition: color 0.3s ease, text-decoration-color 0.3s ease;
+    }
+    .page a:hover { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.6); }
 
     footer {
-      padding: 3rem 2rem;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .footer-copy {
-      font-size: 0.7rem;
-      color: #333;
-      font-weight: 200;
+      margin-top: 6rem;
+      padding-top: 2.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.52);
+      line-height: 2.15;
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="/">← Rewire</a>
-  </nav>
+  <a class="corner brand" href="/">Rewire</a>
+  <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
-  <div class="container">
-    <h1>Privacy Policy</h1>
-    <p class="last-updated">Last updated: June 2026</p>
+  <main class="page">
+    <h1>Privacy policy</h1>
+    <p class="updated">Last updated — June 2026</p>
 
     <h2>Overview</h2>
     <p>Kramer Ventures GmbH ("we", "us", "our") operates the website rewiremission.com. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website and services.</p>
 
-    <h2>Information We Collect</h2>
+    <h2>Information we collect</h2>
     <p>We may collect personal information that you voluntarily provide to us when you contact us via email, subscribe to updates, or interact with our services. This may include your name, email address, and any other information you choose to share.</p>
     <p>We also automatically collect limited usage and device information when you interact with our website and apps — such as pages and screens viewed, interactions, general location, and device or browser type. This diagnostic data is gathered through the analytics tools described below and is used only to understand and improve the experience.</p>
 
-    <h2>How We Use Your Information</h2>
+    <h2>How we use your information</h2>
     <p>We use the information we collect to respond to your inquiries, provide and improve our services, send updates and communications you've opted into, and comply with legal obligations.</p>
 
-    <h2>Analytics & Third-Party Services</h2>
+    <h2>Analytics &amp; third-party services</h2>
     <p>We work with a small number of trusted third-party providers to help us measure and improve the experience. We use Microsoft Clarity for behavioral and usage analytics (such as aggregated interaction patterns), and we may also use Mixpanel for product analytics to understand engagement and improve features. For our apps, we use Superwall to manage and optimize subscription and paywall experiences. We may rely on additional infrastructure and service providers — for example, for hosting or subscription management — under the same principles.</p>
     <p>These providers process data only on our behalf and only as needed to deliver their service. We treat your data as private: we do not sell, rent, or trade it, and we use the information we collect strictly for our own internal analytics and to improve our products and the user experience.</p>
 
-    <h2>Data Storage & Security</h2>
+    <h2>Data storage &amp; security</h2>
     <p>We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. Your data is stored on secure servers within the European Union.</p>
 
-    <h2>Third Parties</h2>
+    <h2>Third parties</h2>
     <p>We do not sell, trade, or otherwise transfer your personal information to third parties. We may share data with trusted service providers who assist us in operating our website, subject to confidentiality agreements.</p>
 
     <h2>Cookies</h2>
     <p>Our website may use cookies to enhance your browsing experience. You can control cookie preferences through your browser settings. We use only essential and analytics cookies, including those set by the analytics providers described above.</p>
 
-    <h2>Your Rights</h2>
+    <h2>Your rights</h2>
     <p>Under applicable data protection law (including the GDPR), you have the right to access, correct, delete, or restrict the processing of your personal data. You may also withdraw consent at any time. To exercise these rights, contact us at <a href="mailto:team@rewiremission.com">team@rewiremission.com</a>.</p>
 
-    <h2>Changes to This Policy</h2>
+    <h2>Changes to this policy</h2>
     <p>We reserve the right to update this Privacy Policy at any time. Changes will be posted on this page with an updated revision date.</p>
 
     <h2>Contact</h2>
-    <p>Kramer Ventures GmbH<br>Email: <a href="mailto:team@rewiremission.com">team@rewiremission.com</a></p>
-  </div>
+    <p>Kramer Ventures GmbH<br>Zürich, Switzerland<br>Email: <a href="mailto:team@rewiremission.com">team@rewiremission.com</a></p>
 
-  <footer>
-    <p class="footer-copy">&copy; 2025 Kramer Ventures GmbH. All rights reserved.</p>
-  </footer>
+    <footer>© 2026 Kramer Ventures GmbH<br>Based in Zürich, Switzerland</footer>
+  </main>
 
 </body>
 </html>

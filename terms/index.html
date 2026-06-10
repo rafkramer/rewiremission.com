@@ -2,140 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Terms of Service — Rewire</title>
+  <meta name="description" content="Terms of service for Rewire (rewiremission.com), operated by Kramer Ventures GmbH.">
+  <meta name="theme-color" content="#020203">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020203'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:wght@400&display=swap');
+    :root {
+      --bg: #020203;
+      --ink-bright: #F2F1EF;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #000;
-      color: #f0f0f0;
-      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: rgba(235, 235, 235, 0.68);
+      font-family: var(--sans);
       font-weight: 300;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    ::selection { background: rgba(255,255,255,0.15); color: #fff; }
+    ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
 
-    nav {
-      padding: 2rem;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(65% 50% at 12% 0%, rgba(28, 25, 80, 0.34), transparent 70%),
+        radial-gradient(55% 45% at 92% 100%, rgba(46, 33, 102, 0.26), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
     }
 
-    nav a {
-      color: #444;
-      text-decoration: none;
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .corner {
+      position: fixed;
+      top: 1.9rem;
+      z-index: 60;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
-      transition: color 0.3s ease;
+      text-decoration: none;
+      color: rgba(235, 235, 235, 0.55);
+      transition: color 0.4s ease;
     }
+    .corner:hover { color: var(--ink-bright); }
+    .corner.brand { left: clamp(1.5rem, 5vw, 3rem); color: rgba(235, 235, 235, 0.68); }
+    .corner.contact { right: clamp(1.5rem, 5vw, 3rem); }
 
-    nav a:hover { color: #888; }
+    a:focus-visible { outline: 1px solid rgba(235, 235, 235, 0.42); outline-offset: 4px; }
 
-    .container {
-      max-width: 640px;
+    .page {
+      max-width: 41em;
       margin: 0 auto;
-      padding: 4rem 2rem 8rem;
+      padding: 9.5rem clamp(1.5rem, 6vw, 2rem) 5rem;
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--serif);
       font-weight: 400;
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
-      margin-bottom: 0.8rem;
-      letter-spacing: -0.02em;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink-bright);
+      margin-bottom: 1rem;
     }
 
-    .last-updated {
-      font-size: 0.75rem;
-      color: #444;
-      letter-spacing: 0.1em;
-      margin-bottom: 3.5rem;
+    .updated {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.5);
+      margin-bottom: 3.6rem;
     }
 
     h2 {
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 0.85rem;
-      letter-spacing: 0.15em;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      margin-top: 3rem;
-      margin-bottom: 1rem;
-      color: #999;
+      color: rgba(235, 235, 235, 0.8);
+      margin: 3rem 0 1rem;
     }
 
     p {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: #777;
-      font-weight: 200;
+      font-size: 1rem;
+      line-height: 1.85;
       margin-bottom: 1rem;
+      text-wrap: pretty;
     }
 
-    a { color: #999; }
+    .page a {
+      color: rgba(235, 235, 235, 0.85);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(255, 255, 255, 0.25);
+      transition: color 0.3s ease, text-decoration-color 0.3s ease;
+    }
+    .page a:hover { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.6); }
 
     footer {
-      padding: 3rem 2rem;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .footer-copy {
-      font-size: 0.7rem;
-      color: #333;
-      font-weight: 200;
+      margin-top: 6rem;
+      padding-top: 2.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.52);
+      line-height: 2.15;
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="/">← Rewire</a>
-  </nav>
+  <a class="corner brand" href="/">Rewire</a>
+  <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
-  <div class="container">
-    <h1>Terms of Service</h1>
-    <p class="last-updated">Last updated: June 2026</p>
+  <main class="page">
+    <h1>Terms of service</h1>
+    <p class="updated">Last updated — June 2026</p>
 
-    <h2>Acceptance of Terms</h2>
+    <h2>Acceptance of terms</h2>
     <p>By accessing and using the website rewiremission.com, operated by Kramer Ventures GmbH, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website or services.</p>
 
-    <h2>Use of Services</h2>
+    <h2>Use of services</h2>
     <p>You agree to use our website and services only for lawful purposes and in accordance with these terms. You may not use our services in any way that could damage, disable, or impair the website or interfere with any other party's use of the services.</p>
 
     <h2>Privacy</h2>
     <p>Your use of our website and services is also governed by our <a href="/privacy">Privacy Policy</a>, which explains what information we collect and how it is used. We treat your data as private and use it only for our own internal analytics and to improve the experience — we do not sell it.</p>
 
-    <h2>Intellectual Property</h2>
+    <h2>Intellectual property</h2>
     <p>All content on this website — including text, graphics, logos, and software — is the property of Kramer Ventures GmbH or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without prior written consent.</p>
 
-    <h2>Disclaimer of Warranties</h2>
+    <h2>Disclaimer of warranties</h2>
     <p>Our website and services are provided on an "as is" and "as available" basis without warranties of any kind, either express or implied. We do not warrant that the services will be uninterrupted, error-free, or free of harmful components.</p>
 
-    <h2>Limitation of Liability</h2>
+    <h2>Limitation of liability</h2>
     <p>To the maximum extent permitted by applicable law, Kramer Ventures GmbH shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of our website or services.</p>
 
-    <h2>Third-Party Links</h2>
+    <h2>Third-party links</h2>
     <p>Our website may contain links to third-party websites. We are not responsible for the content or practices of any linked third-party sites. Access to such sites is at your own risk.</p>
 
-    <h2>Third-Party Services</h2>
+    <h2>Third-party services</h2>
     <p>We use third-party service providers to operate, measure, and improve our website and apps — including analytics providers such as Microsoft Clarity (and, where applicable, Mixpanel) and subscription and paywall management providers such as Superwall. Your use of our services may also be subject to these providers' own terms and policies. How data collected through these services is handled is described in our <a href="/privacy">Privacy Policy</a>.</p>
 
     <h2>Modifications</h2>
     <p>We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting. Your continued use of the website constitutes acceptance of the updated terms.</p>
 
-    <h2>Governing Law</h2>
-    <p>These terms shall be governed by and construed in accordance with the laws of the Federal Republic of Germany, without regard to conflict of law provisions.</p>
+    <h2>Governing law</h2>
+    <p>These terms shall be governed by and construed in accordance with the laws of Switzerland, without regard to conflict of law provisions.</p>
 
     <h2>Contact</h2>
-    <p>Kramer Ventures GmbH<br>Email: <a href="mailto:team@rewiremission.com">team@rewiremission.com</a></p>
-  </div>
+    <p>Kramer Ventures GmbH<br>Zürich, Switzerland<br>Email: <a href="mailto:team@rewiremission.com">team@rewiremission.com</a></p>
 
-  <footer>
-    <p class="footer-copy">&copy; 2025 Kramer Ventures GmbH. All rights reserved.</p>
-  </footer>
+    <footer>© 2026 Kramer Ventures GmbH<br>Based in Zürich, Switzerland</footer>
+  </main>
 
 </body>
 </html>

@@ -2,106 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Contact — Rewire</title>
-  <meta name="description" content="Get in touch with the Rewire team.">
+  <meta name="description" content="Contact the Rewire team — team@rewiremission.com.">
+  <meta name="theme-color" content="#020203">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020203'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:wght@400&display=swap');
+    :root {
+      --bg: #020203;
+      --ink-bright: #F2F1EF;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #000;
-      color: #f0f0f0;
-      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: rgba(235, 235, 235, 0.68);
+      font-family: var(--sans);
       font-weight: 300;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    ::selection { background: rgba(255,255,255,0.15); color: #fff; }
+    ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
 
-    nav {
-      padding: 2rem;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(65% 50% at 12% 0%, rgba(28, 25, 80, 0.34), transparent 70%),
+        radial-gradient(55% 45% at 92% 100%, rgba(46, 33, 102, 0.26), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
     }
 
-    nav a {
-      color: #444;
-      text-decoration: none;
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .corner {
+      position: fixed;
+      top: 1.9rem;
+      z-index: 60;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
-      transition: color 0.3s ease;
+      text-decoration: none;
+      color: rgba(235, 235, 235, 0.55);
+      transition: color 0.4s ease;
     }
+    .corner:hover { color: var(--ink-bright); }
+    .corner.brand { left: clamp(1.5rem, 5vw, 3rem); color: rgba(235, 235, 235, 0.68); }
+    .corner.contact { right: clamp(1.5rem, 5vw, 3rem); }
 
-    nav a:hover { color: #888; }
+    a:focus-visible { outline: 1px solid rgba(235, 235, 235, 0.42); outline-offset: 4px; }
 
-    .container {
-      max-width: 640px;
+    .page {
+      max-width: 41em;
       margin: 0 auto;
-      padding: 4rem 2rem 8rem;
+      padding: 9.5rem clamp(1.5rem, 6vw, 2rem) 5rem;
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--serif);
       font-weight: 400;
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
-      margin-bottom: 0.8rem;
-      letter-spacing: -0.02em;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink-bright);
+      margin-bottom: 1rem;
     }
 
-    .intro {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: #777;
-      font-weight: 200;
-      max-width: 460px;
-      margin-bottom: 3rem;
+    .updated {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.5);
+      margin-bottom: 3.6rem;
     }
 
-    .email-link {
-      display: inline-block;
-      color: #f0f0f0;
-      text-decoration: none;
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-      padding: 1rem 2.5rem;
-      border: 1px solid #333;
-      transition: all 0.5s ease;
+    h2 {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.8);
+      margin: 3rem 0 1rem;
     }
 
-    .email-link:hover {
-      border-color: #666;
-      background: rgba(255,255,255,0.03);
+    p {
+      font-size: 1rem;
+      line-height: 1.85;
+      margin-bottom: 1rem;
+      text-wrap: pretty;
     }
+
+    .page a {
+      color: rgba(235, 235, 235, 0.85);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(255, 255, 255, 0.25);
+      transition: color 0.3s ease, text-decoration-color 0.3s ease;
+    }
+    .page a:hover { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.6); }
 
     footer {
-      padding: 3rem 2rem;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 6rem;
+      padding-top: 2.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.52);
+      line-height: 2.15;
     }
-
-    .footer-copy {
-      font-size: 0.7rem;
-      color: #333;
-      font-weight: 200;
+  
+    .page.contact { padding-top: 36vh; text-align: center; }
+    .email {
+      display: inline-block;
+      margin-top: 2.2rem;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3.6vw, 2.3rem);
+      color: var(--ink-bright) !important;
+      text-decoration-color: rgba(159, 179, 237, 0.5) !important;
+      text-underline-offset: 6px !important;
     }
+    .page.contact footer { border-top: none; margin-top: 7rem; }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="/">← Rewire</a>
-  </nav>
+  <a class="corner brand" href="/">Rewire</a>
+  <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
-  <div class="container">
+  <main class="page contact">
     <h1>Contact</h1>
-    <p class="intro">Questions, press, partnerships, or anything else — reach the team directly. We read every message.</p>
-    <a href="mailto:team@rewiremission.com" class="email-link">team@rewiremission.com</a>
-  </div>
+    <p>Questions, press, partnerships, or anything else — reach the team directly. We read every message.</p>
+    <a class="email" href="mailto:team@rewiremission.com">team@rewiremission.com</a>
 
-  <footer>
-    <p class="footer-copy">&copy; 2025 Kramer Ventures GmbH. All rights reserved.</p>
-  </footer>
+    <footer>© 2026 Kramer Ventures GmbH<br>Based in Zürich, Switzerland</footer>
+  </main>
 
 </body>
 </html>
