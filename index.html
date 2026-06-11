@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Rewire — Mind Engineering</title>
   <meta name="description" content="Rewire is mind engineering: audio sessions built from clinical hypnotherapy, CBT and neural audio — written word by word for the 95% of your mind that willpower can't reach.">
-  <meta name="theme-color" content="#2b364f">
+  <meta name="theme-color" content="#13223F">
   <meta property="og:title" content="Rewire — Mind Engineering">
   <meta property="og:description" content="Audio sessions for the 95% of your mind that willpower can't reach.">
   <meta property="og:url" content="https://rewiremission.com">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b364f'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
        writing that brightens as you read it.
        ============================================================ */
     :root {
-      --bg: #2b364f;
+      --bg: #13223F;
       --ink-bright: #F2F1EF;
       --ink: rgba(235, 235, 235, 0.86);
       --ink-muted: rgba(235, 235, 235, 0.60);
@@ -49,6 +49,21 @@
     ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
 
     /* ============ The room — drifting pools of light ============ */
+    /* The aurora canvas — the app's ambient shader, ported. When WebGL is
+       running, the CSS drift pools hide and the canvas IS the room. */
+    #atmo {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -2;
+      opacity: 0;
+      transition: opacity 1.6s ease;
+    }
+    html.atmo #atmo { opacity: 1; }
+    html.atmo .drift { display: none; }
+
     .drift {
       position: fixed;
       inset: 0;
@@ -502,6 +517,7 @@
 </head>
 <body>
 
+  <canvas id="atmo" aria-hidden="true"></canvas>
   <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
   <div class="halo" id="halo" aria-hidden="true"><div class="core"></div></div>
 
@@ -658,6 +674,108 @@
       };
       setTimeout(swap, dwell);
     }
+
+    /* ---------- the atmosphere — the app's ambient aurora shader, ported
+       from Skia (atmosphere.tsx) to WebGL. Rendered at low res and scaled
+       up, exactly like the app (renderScale 0.45). ---------- */
+    (() => {
+      const canvas = document.getElementById('atmo');
+      const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
+      if (!gl) return;
+      const FRAG = `
+precision mediump float;
+uniform vec2 u_res;
+uniform float u_time;
+
+vec2 rotate2(vec2 p, float a) {
+  float c = cos(a); float s = sin(a);
+  return vec2(c * p.x + s * p.y, -s * p.x + c * p.y);
+}
+float softBand(float value, float center, float width) {
+  float d = abs(value - center);
+  return 1.0 - smoothstep(width * 0.35, width, d);
+}
+void main() {
+  vec2 xy = vec2(gl_FragCoord.x, u_res.y - gl_FragCoord.y);
+  vec2 q = xy / u_res;
+  vec2 p = (xy - 0.5 * u_res) / u_res.y;
+  float t = u_time * 0.085;
+
+  float radius = length(p);
+  float diagonalA = dot(p, vec2(0.82, -0.57));
+  float diagonalB = dot(p, vec2(0.38, 0.93));
+  vec2 flow = rotate2(p, sin(t * 0.37) * 0.16);
+  flow += vec2(sin(p.y * 2.4 + t * 0.82), cos(p.x * 2.1 - t * 0.64)) * 0.075;
+  flow += vec2(sin((p.x + p.y) * 1.65 - t * 0.55), cos((p.x - p.y) * 1.45 + t * 0.48)) * 0.045;
+
+  float field =
+    sin(flow.x * 2.15 + cos(flow.y * 1.85 + t * 0.7) * 1.1 + diagonalB * 1.2) * 0.38 +
+    sin(flow.y * 3.05 - t * 0.72 + diagonalA * 1.7) * 0.28 +
+    cos((flow.x - flow.y) * 2.35 + diagonalB * 1.35 - t * 0.44) * 0.22 +
+    sin((diagonalA - diagonalB) * 4.0 - t * 1.05) * 0.12;
+
+  float body = smoothstep(-0.62, 0.72, field);
+  float ribbon = softBand(field, 0.12, 0.34);
+  float crest = softBand(field, 0.48, 0.2);
+
+  vec3 deep = vec3(0.085, 0.145, 0.270);
+  vec3 body3 = vec3(0.150, 0.240, 0.405);
+  vec3 light = vec3(0.440, 0.620, 0.830);
+  vec3 color = mix(deep, body3, body);
+  color = mix(color, light, ribbon * 0.62);
+  color += vec3(0.140, 0.215, 0.330) * crest * 0.75;
+
+  float haze = smoothstep(0.9, 0.04, radius) * 0.24;
+  color += vec3(0.070, 0.115, 0.180) * haze;
+  color = color / (color + vec3(0.78));
+
+  float vignette = pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), 0.16);
+  color *= 0.74 + vignette * 0.3;
+
+  gl_FragColor = vec4(color, 1.0);
+}`;
+      const VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+      const sh = (type, src) => {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+      };
+      const vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, FRAG);
+      if (!vs || !fs) return;
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'a');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      const uRes = gl.getUniformLocation(prog, 'u_res');
+      const uTime = gl.getUniformLocation(prog, 'u_time');
+
+      const SCALE = 0.45;
+      const size = () => {
+        canvas.width = Math.max(1, Math.round(innerWidth * SCALE));
+        canvas.height = Math.max(1, Math.round(innerHeight * SCALE));
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+      };
+      size();
+      addEventListener('resize', size);
+
+      const draw = (t) => {
+        gl.uniform1f(uTime, t / 1000);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      };
+      draw(0);
+      document.documentElement.classList.add('atmo');
+      if (!reduced) {
+        const frame = (t) => { if (!document.hidden) draw(t); requestAnimationFrame(frame); };
+        requestAnimationFrame(frame);
+      }
+    })();
 
     /* ---------- soft entrances ---------- */
     const hero = document.querySelector('.hero');
