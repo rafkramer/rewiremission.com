@@ -563,7 +563,7 @@
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
     /* ---------- rotating word (the app's welcome line) ----------
-       Every 5th word is "for anything." — underlined, the promise. */
+       After every 3 random words, "for anything." — underlined, the promise. */
     const words = [
       'for sleep.', 'to perform.', 'for focus.', 'to quit smoking.',
       'for confidence.', 'to stop overthinking.', 'for calm.', 'to drink less.',
@@ -574,7 +574,57 @@
       'for self-belief.', 'to stop doomscrolling.', 'for new habits.', 'to handle pressure.',
       'for peace.', 'to say no.', 'for strength.', 'to start over.',
       'for energy.', 'to forgive.', 'for purpose.', 'to slow down.',
-      'for grit.', 'to show up.', 'for patience.', 'to move on.'
+      'for grit.', 'to show up.', 'for patience.', 'to move on.',
+      'to fix overthinking.', 'for cold showers.', 'to floss daily.', 'for monday mornings.',
+      'to stop hitting snooze.', 'for leg day.', 'to drink more water.', 'for tax season.',
+      'to inbox zero.', 'for stage fright.', 'to stop biting your nails.', 'for first dates.',
+      'to parallel park.', 'for job interviews.', 'to stop checking your phone.', 'for red-eye flights.',
+      'to learn the guitar.', 'for marathon training.', 'to write the first draft.', 'for public speaking.',
+      'to stop gossiping.', 'for ice baths.', 'to meal prep on sundays.', 'for dentist visits.',
+      'to back up your files.', 'for family dinners.', 'to stop comparing yourself.', 'for the gym at 6am.',
+      'to finish what you start.', 'for stage five clinger exes.', 'to stretch every morning.', 'for open mic night.',
+      'to stop impulse buying.', 'for long meetings.', 'to read before bed.', 'for traffic jams.',
+      'to take the stairs.', 'for awkward small talk.', 'to call your mom.', 'for deadline week.',
+      'to stop refreshing the feed.', 'for jet lag.', 'to journal nightly.', 'for blank pages.',
+      'to skip dessert.', 'for hard conversations.', 'to budget honestly.', 'for slow wifi.',
+      'to learn to swim.', 'for networking events.', 'to stop people-pleasing.', 'for moving day.',
+      'to actually meditate.', 'for crowded subways.', 'to keep your plants alive.', 'for sunday scaries.',
+      'to quit energy drinks.', 'for parent-teacher night.', 'to run in the rain.', 'for breakup playlists.',
+      'to stop snacking at midnight.', 'for group projects.', 'to learn a language.', 'for camera shyness.',
+      'to take real lunch breaks.', 'for crypto winters.', 'to walk 10k steps.', 'for layover marathons.',
+      'to declutter the garage.', 'for stagnant playlists.', 'to skip the third coffee.', 'for IKEA assembly.',
+      'to write thank-you notes.', 'for noisy neighbors.', 'to stop autoplaying.', 'for exam halls.',
+      'to learn to cook.', 'for empty gyms in january.', 'to sit with boredom.', 'for slow elevators.',
+      'to stop one-more-episode.', 'for spreadsheet days.', 'to plank a full minute.', 'for windowless offices.',
+      'to floss your brain.', 'for karaoke courage.', 'to leave work at work.', 'for waiting rooms.',
+      'to silence your group chats.', 'for early flights.', 'to make your bed.', 'for code reviews.',
+      'to skip the snooze spiral.', 'for spice tolerance.', 'to clean as you go.', 'for cold calls.',
+      'to listen more.', 'for haircut regret.', 'to drink your greens.', 'for cliffhanger finales.',
+      'to walk the dog at dawn.', 'for blank canvases.', 'to fold the laundry today.', 'for merge conflicts.',
+      'to take cold plunges.', 'for road trip patience.', 'to stop subtweeting.', 'for piano scales.',
+      'to read the manual.', 'for stale standups.', 'to skip the elevator pitch.', 'for grocery lines.',
+      'to befriend mondays.', 'for stage lighting.', 'to write in pen.', 'for forgotten passwords.',
+      'to nap without guilt.', 'for chess blunders.', 'to retire your excuses.', 'for burnt toast mornings.',
+      'to learn to whistle.', 'for tangled headphones.', 'to compost consistently.', 'for slow walkers.',
+      'to embrace the b-side.', 'for misplaced keys.', 'to single-task.', 'for awkward silences.',
+      'to drink decaf gracefully.', 'for pop quizzes.', 'to love your handwriting.', 'for parallel universes.',
+      'to lift heavier.', 'for spoiler dodging.', 'to text back on time.', 'for windswept umbrellas.',
+      'to befriend your alarm.', 'for sourdough starters.', 'to finish the book.', 'for printer rage.',
+      'to ride without training wheels.', 'for stale leftovers.', 'to own your weird.', 'for typo shame.',
+      'to outlast the plateau.', 'for swimming pool sprints.', 'to skip the gossip.', 'for misread texts.',
+      'to high-five strangers.', 'for marathon spectating.', 'to water fast wisely.', 'for autocorrect chaos.',
+      'to learn morse code.', 'for camping trips.', 'to whittle a spoon.', 'for sock drawer order.',
+      'to roast your own beans.', 'for jigsaw patience.', 'to bike to work.', 'for thermostat wars.',
+      'to memorize pi.', 'for crossword streaks.', 'to garden barefoot.', 'for inbox archaeology.',
+      'to sing in the shower.', 'for speed chess.', 'to skip the drama.', 'for puddle season.',
+      'to ace the driving test.', 'for birdwatching dawns.', 'to knead better dough.', 'for stuck zippers.',
+      'to stack firewood.', 'for fantasy drafts.', 'to learn calligraphy.', 'for popcorn ceilings.',
+      'to debug calmly.', 'for sand in your shoes.', 'to juggle three balls.', 'for pottery wheels.',
+      'to brew better tea.', 'for tangled christmas lights.', 'to chop onions tearless.', 'for lost remotes.',
+      'to solve the cube.', 'for moth-eaten sweaters.', 'to map the stars.', 'for squeaky doors.',
+      'to skate the bowl.', 'for spilled coffee.', 'to press wildflowers.', 'for late buses.',
+      'to ferment everything.', 'for chipped mugs.', 'to free-solo your fears.', 'for dead phone batteries.',
+      'to dance at weddings.', 'for monday standups.', 'to nail the soufflé.', 'for creaky floorboards.'
     ];
     const rot = document.getElementById('rotator');
     if (rot && !reduced) {
@@ -587,15 +637,18 @@
         if (document.hidden) return;
         const olds = Array.from(rot.querySelectorAll('.word'));
         n++;
-        const isAny = n % 5 === 4;
+        const isAny = n % 4 === 3;
         dwell = isAny ? DWELL_ANY : DWELL;
         const nw = document.createElement('span');
         nw.className = isAny ? 'word any' : 'word';
         const inner = document.createElement('i');
-        inner.textContent = isAny ? 'for anything.' : words[i = (i + 1) % words.length];
-        const len = inner.textContent.length;
-        if (len > 19) nw.classList.add('w-s');
-        else if (len > 15) nw.classList.add('w-m');
+        if (isAny) {
+          inner.textContent = 'for anything.';
+        } else {
+          let next;
+          do { next = Math.floor(Math.random() * words.length); } while (next === i);
+          inner.textContent = words[i = next];
+        }
         nw.appendChild(inner);
         rot.appendChild(nw);
         requestAnimationFrame(() => requestAnimationFrame(() => {
