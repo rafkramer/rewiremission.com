@@ -14,7 +14,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     /* ============================================================
@@ -23,6 +23,22 @@
        light drift through the room. The manifesto is one piece of
        writing that brightens as you read it.
        ============================================================ */
+    /* The app's exact serif — same TTFs the app ships (assets/fonts) */
+    @font-face {
+      font-family: 'Instrument Serif';
+      src: url('/fonts/InstrumentSerif-Regular.ttf') format('truetype');
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Instrument Serif';
+      src: url('/fonts/InstrumentSerif-Italic.ttf') format('truetype');
+      font-style: italic;
+      font-weight: 400;
+      font-display: swap;
+    }
+
     :root {
       --bg: #13223F;
       --ink-bright: #F2F1EF;
@@ -695,6 +711,24 @@ float softBand(float value, float center, float width) {
   float d = abs(value - center);
   return 1.0 - smoothstep(width * 0.35, width, d);
 }
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+float noise(vec2 p) {
+  vec2 i = floor(p); vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+float fbm(vec2 p) {
+  float v = 0.0; float a = 0.5;
+  for (int i = 0; i < 5; i++) {
+    v += a * noise(p);
+    p = p * 2.02 + vec2(13.7, 7.3);
+    a *= 0.5;
+  }
+  return v;
+}
 void main() {
   vec2 xy = vec2(gl_FragCoord.x, u_res.y - gl_FragCoord.y);
   vec2 q = xy / u_res;
@@ -727,6 +761,17 @@ void main() {
 
   float haze = smoothstep(0.9, 0.04, radius) * 0.24;
   color += vec3(0.070, 0.115, 0.180) * haze;
+
+  // Billowy cloud bodies: two drifting fbm layers, domain-warped so they
+  // curl instead of scroll. They brighten the field like moonlit clouds.
+  vec2 cp = p * 2.1 + vec2(t * 0.16, -t * 0.05);
+  vec2 warp = vec2(fbm(cp + vec2(0.0, t * 0.08)), fbm(cp + vec2(5.2, 1.3)));
+  float clouds = fbm(cp + warp * 1.35);
+  float puff = smoothstep(0.42, 0.85, clouds);
+  float wisp = smoothstep(0.55, 0.95, fbm(cp * 1.9 - vec2(t * 0.1, 0.0) + warp));
+  color = mix(color, color + vec3(0.20, 0.27, 0.38), puff * 0.75);
+  color += vec3(0.12, 0.17, 0.24) * wisp * 0.55;
+
   color = color / (color + vec3(0.78));
 
   float vignette = pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), 0.16);
