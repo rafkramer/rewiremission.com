@@ -508,6 +508,27 @@
 
     .guide-more:hover { color: var(--ink-bright); }
 
+    .tool-link {
+      margin-top: 1.5rem;
+      font-size: clamp(0.97rem, 1.3vw, 1.07rem);
+      line-height: 1.85;
+      color: var(--ink-muted);
+      max-width: 34em;
+    }
+
+    .tool-link a {
+      color: rgba(242, 241, 239, 0.9);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: rgba(199, 208, 244, 0.36);
+      transition: color 0.3s ease, text-decoration-color 0.3s ease;
+    }
+
+    .tool-link a:hover {
+      color: #fff;
+      text-decoration-color: rgba(199, 208, 244, 0.72);
+    }
+
     /* ============ Download ============ */
     .download {
       position: relative;
@@ -684,6 +705,7 @@
         </a>
       </div>
       <a class="guide-more rise d2" href="/guides/">Explore all guides</a>
+      <p class="tool-link rise d2">Caught in a text spiral? Try the free <a href="/tools/should-i-text-them/">Should I text them?</a> reset.</p>
     </section>
 
     <!-- ============ Download ============ -->
@@ -697,7 +719,7 @@
           </a>
         </div>
         <p class="legal rise d2">
-          <a href="/guides/">Guides</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><a href="mailto:team@rewiremission.com">Contact</a>
+          <a href="/tools/">Tools</a><span class="sep">·</span><a href="/guides/">Guides</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><a href="mailto:team@rewiremission.com">Contact</a>
         </p>
         <p class="legal second rise d2">© 2026 Kramer Ventures GmbH<br>Based in Zürich, Switzerland</p>
       </div>

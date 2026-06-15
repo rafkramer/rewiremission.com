@@ -495,7 +495,168 @@ const newArticles = [
   }
 ];
 
-const articles = [...existingArticles, ...newArticles];
+function makeTextingPanicArticle({
+  slug,
+  title,
+  cardTitle,
+  topic,
+  description,
+  dek,
+  quickReset,
+  fear,
+  doNotDo,
+  nextAction,
+  related
+}) {
+  return {
+    slug,
+    title,
+    cardTitle,
+    topic,
+    cluster: 'social',
+    description,
+    dek,
+    readTime: '5 minute reset',
+    quickReset,
+    why: [
+      `This search usually happens when the phone has become the whole room. The facts are small, but the meaning feels huge: ${fear}`,
+      'That is why generic advice does not land. You do not need a lecture about confidence; you need a rule for the next ten minutes so the anxious part of your mind stops driving.',
+      'The point is not to decode the other person perfectly. The point is to stop outsourcing your state to a reply, a read receipt, a story view, or a number on a screen.'
+    ],
+    steps: [
+      ['Set a decision delay', 'Do not make the next move from the peak of the urge. Choose a short window: 10 minutes if you are spiraling, 24 hours if it involves an ex, or tomorrow morning if it is late at night.'],
+      ['Separate signal from story', 'Write one observable fact and one story your brain is adding. Example: "They have not replied" is a fact. "I ruined it" is a story.'],
+      ['Do not feed the loop', doNotDo],
+      ['Choose the next clean action', nextAction],
+      ['Run a body reset', 'Move the phone away, unclench your jaw, drop your shoulders, and use a longer exhale for five breaths. Your nervous system needs proof that this is not an emergency.']
+    ],
+    rewire: [
+      'Rewire fits these moments because the pattern is automatic: check, interpret, panic, act, regret, repeat.',
+      'A guided session gives the urge somewhere to go before you send the text, check again, or reopen the old loop.'
+    ],
+    ctaHeading: 'Use the texting reset before you act',
+    ctaCopy: 'Run the free Should I Text Them? reset, then use Rewire to train the deeper pattern: calm before checking, self-trust before chasing, and steadiness before you send.',
+    tool: {
+      href: '/tools/should-i-text-them/',
+      label: 'Open the free Should I Text Them? reset'
+    },
+    faq: [
+      [`${title}?`, 'If you are asking from panic, pause first. Make the next move from a steadier state, not from the part of you trying to get immediate relief.'],
+      ['How do I stop checking my phone right now?', 'Move it out of reach, set one allowed check time, and do an action that makes checking inconvenient: shower, walk, cook, stretch, or start a guided reset.'],
+      ['Can Rewire help with texting anxiety?', 'Rewire can help you rehearse calm during uncertainty. It will not control another person, but it can help you stop handing your nervous system to the phone.']
+    ],
+    related
+  };
+}
+
+const quickWinArticles = [
+  makeTextingPanicArticle({
+    slug: 'should-i-text-my-ex-quiz',
+    title: 'Should I Text My Ex Quiz',
+    cardTitle: 'Should I text my ex quiz',
+    topic: 'Ex texting',
+    description: 'A fast should I text my ex quiz for the moment you want to send the message, plus a 24-hour reset to protect tomorrow-you.',
+    dek: 'If you are searching "should I text my ex quiz," part of you already knows this is not a normal text. It is a bid for relief, closure, proof, repair, or one more hit of connection.',
+    quickReset: 'Do not send tonight. Write the message somewhere private, wait 24 hours, and run the reset before you decide whether the text serves tomorrow-you.',
+    fear: 'If you do not send it now, the chance might disappear, the feeling might swallow you, or the story might never get a cleaner ending.',
+    doNotDo: 'Do not send a late-night emotional paragraph, a disguised "checking in" message, or a text whose real purpose is to see if they still care.',
+    nextAction: 'Write the exact text in notes, label what you want it to do emotionally, and decide whether a calm tomorrow version would still send it.',
+    related: ['urge-to-text-your-ex-at-night', 'stop-checking-if-they-replied']
+  }),
+  makeTextingPanicArticle({
+    slug: 'should-i-text-him-quiz',
+    title: 'Should I Text Him Quiz',
+    cardTitle: 'Should I text him quiz',
+    topic: 'Texting anxiety',
+    description: 'A quick should I text him quiz for dating anxiety: know when to send, when to wait, and when the urge is really reassurance-seeking.',
+    dek: 'If you are searching for a "should I text him quiz," the question probably is not only about the message. It is about whether texting will make you feel chosen, exposed, needy, or relieved.',
+    quickReset: 'If the text is honest and low-stakes, send it once. If it is bait for reassurance, wait 20 minutes and regulate first.',
+    fear: 'You might look too interested, lose momentum, seem needy, or miss the chance to keep the connection alive.',
+    doNotDo: 'Do not send a strategy text you do not mean, a fake casual message, or a follow-up whose only job is to test whether he still likes you.',
+    nextAction: 'Choose one clean sentence you would respect tomorrow. If you cannot write one, the next action is to wait, not perform.',
+    related: ['anxiety-after-sending-a-text', 'should-i-double-text-him-or-wait']
+  }),
+  makeTextingPanicArticle({
+    slug: 'should-i-double-text-him-or-wait',
+    title: 'Should I Double Text Him or Wait',
+    cardTitle: 'Should I double text him or wait',
+    topic: 'Double text',
+    description: 'A practical answer for should I double text him or wait: when a second text is fine, when it feeds anxiety, and what to do first.',
+    dek: 'Double texting is not automatically bad. Panic-double-texting is different. The question is whether the second text adds information or tries to erase the discomfort of waiting.',
+    quickReset: 'Wait unless the second text adds a real detail, changes logistics, or says something you would still stand by if he does not respond.',
+    fear: 'Silence might mean disinterest, and a second text feels like the only lever you can pull.',
+    doNotDo: 'Do not send "??", a guilt text, a joke that hides anxiety, or a second message just to force the thread back open.',
+    nextAction: 'Write the second text. If it contains pressure, panic, or a hidden demand, do not send it yet. If it contains useful information, send it cleanly once.',
+    related: ['stop-checking-if-they-replied', 'he-hasnt-texted-me-back-in-24-hours']
+  }),
+  makeTextingPanicArticle({
+    slug: 'he-hasnt-texted-me-back-in-24-hours',
+    title: "He Hasn't Texted Me Back in 24 Hours",
+    cardTitle: "He hasn't texted me back in 24 hours",
+    topic: 'No reply',
+    description: "A calm reset for he hasn't texted me back in 24 hours: what it may mean, what not to do, and how to stop spiraling.",
+    dek: 'Twenty-four hours can feel like a verdict when you are attached to the reply. But a delay is still incomplete information, not a full explanation of your worth.',
+    quickReset: 'Do not build a final story from a partial signal. Set one check window, stop rereading the thread, and choose one non-phone action.',
+    fear: 'The silence might mean you were too much, not enough, forgotten, rejected, or quietly replaced.',
+    doNotDo: 'Do not keep reopening the chat, checking active status, or sending a message designed to punish the silence.',
+    nextAction: 'If there is no urgent logistical need, wait. If there is a real plan to confirm, send one clear practical message and then stop checking.',
+    related: ['left-on-delivered-for-2-days', 'stop-checking-if-they-replied']
+  }),
+  makeTextingPanicArticle({
+    slug: 'he-left-me-on-read-but-watches-my-stories',
+    title: 'He Left Me on Read but Watches My Stories',
+    cardTitle: 'He left me on read but watches my stories',
+    topic: 'Story watching',
+    description: 'A specific reset for he left me on read but watches my stories: stop decoding mixed signals and get your attention back.',
+    dek: 'Being left on read while they watch your stories is uniquely annoying because it feels like evidence and ambiguity at the same time. They are present enough to see you, absent enough not to answer.',
+    quickReset: 'Treat story views as weak data. Do not turn them into a court case. Mute, wait, and decide based on direct behavior, not passive watching.',
+    fear: 'They might be interested enough to monitor you but not interested enough to choose you, and that half-signal can keep you hooked.',
+    doNotDo: 'Do not post bait, check every viewer list, or send a message whose real purpose is to confront a story view.',
+    nextAction: 'Mute their stories or hide yours for 24 hours. Make your next decision from direct communication, not surveillance.',
+    related: ['left-on-delivered-for-2-days', 'should-i-text-him-quiz']
+  }),
+  makeTextingPanicArticle({
+    slug: 'left-on-delivered-for-2-days',
+    title: 'Left on Delivered for 2 Days',
+    cardTitle: 'Left on delivered for 2 days',
+    topic: 'Delivered anxiety',
+    description: 'A practical reset for being left on delivered for 2 days: stop checking, reduce anxious attachment spirals, and choose the next clean move.',
+    dek: 'Being left on delivered for 2 days feels worse than a clear no because the door looks technically open. Your brain keeps standing in the doorway.',
+    quickReset: 'Stop refreshing the same evidence. Decide whether one clean follow-up is appropriate, then put the phone away for a real block of time.',
+    fear: 'You might be ignored on purpose, hidden in the queue, or waiting while they decide how much access you get.',
+    doNotDo: 'Do not send multiple escalating messages, stalk activity, or use another app to force attention.',
+    nextAction: 'If the thread matters, send one simple follow-up after 48 hours. If there is still no reply, treat the behavior as information and step back.',
+    related: ['he-hasnt-texted-me-back-in-24-hours', 'he-left-me-on-read-but-watches-my-stories']
+  }),
+  makeTextingPanicArticle({
+    slug: 'how-to-stop-checking-ex-social-media',
+    title: 'How to Stop Checking Ex Social Media',
+    cardTitle: 'How to stop checking ex social media',
+    topic: 'Ex social media',
+    description: 'A specific reset for how to stop checking ex social media: break the stalking loop, remove triggers, and stop reopening the breakup.',
+    dek: 'Checking your ex social media feels like information, but it often functions like emotional self-harm. You go looking for certainty and leave with a new image to process.',
+    quickReset: 'Block, mute, or remove the path for 7 days. Not forever if that feels impossible. Seven days is enough to prove the urge can crest and fall.',
+    fear: 'They might move on, post someone new, look happier, or reveal that you meant less than you hoped.',
+    doNotDo: 'Do not use burner accounts, mutual friends, story viewers, or location clues to keep the loop alive.',
+    nextAction: 'Create a 7-day no-check rule and replace the first urge with an unsent note: "What am I hoping to find, and what will it cost me?"',
+    related: ['urge-to-text-your-ex-at-night', 'should-i-text-my-ex-quiz']
+  }),
+  makeTextingPanicArticle({
+    slug: 'how-to-stop-checking-his-snap-score',
+    title: 'How to Stop Checking His Snap Score',
+    cardTitle: 'How to stop checking his Snap score',
+    topic: 'Snap score checking',
+    description: 'A niche reset for how to stop checking his Snap score: break the score-checking compulsion and stop turning tiny numbers into proof.',
+    dek: 'Snap score checking is brutal because it gives you just enough data to invent a story. The number changes, your stomach drops, and suddenly you are comparing yourself to an invisible conversation.',
+    quickReset: 'Remove the score from view, set a 24-hour no-check rule, and stop treating tiny number changes as relationship evidence.',
+    fear: 'A changing score might mean he is active, choosing other people, ignoring you specifically, or hiding something.',
+    doNotDo: 'Do not screenshot, calculate, compare timestamps, or ask a question whose real source is the score.',
+    nextAction: 'Mute or remove the app shortcut for 24 hours. If you need clarity, ask for clarity directly later, not from a number refresh.',
+    related: ['stop-checking-if-they-replied', 'he-left-me-on-read-but-watches-my-stories']
+  })
+];
+
+const articles = [...existingArticles, ...newArticles, ...quickWinArticles];
 const articleBySlug = new Map(articles.map(article => [article.slug, article]));
 
 const escapeHtml = value => String(value)
@@ -606,6 +767,11 @@ ${article.steps.map(([heading, text]) => `        <li><strong>${escapeHtml(headi
 
       <h2>Where Rewire fits</h2>
 ${article.rewire.map(paragraph => `      <p>${escapeHtml(paragraph)}</p>`).join('\n')}
+
+${article.tool ? `      <div class="callout">
+        <p><strong>Free reset:</strong> <a href="${article.tool.href}">${escapeHtml(article.tool.label)}</a>.</p>
+      </div>
+` : ''}
 
       <div class="cta-box">
         <h2>${escapeHtml(article.ctaHeading)}</h2>
@@ -720,6 +886,8 @@ ${sections}
 function renderSitemap() {
   const urls = [
     { loc: `${site}/`, priority: '1.0', changefreq: 'monthly' },
+    { loc: `${site}/tools/`, priority: '0.8', changefreq: 'monthly' },
+    { loc: `${site}/tools/should-i-text-them/`, priority: '0.9', changefreq: 'monthly' },
     { loc: `${site}/guides/`, priority: '0.9', changefreq: 'weekly' },
     ...articles.map(article => ({
       loc: `${site}/guides/${article.slug}/`,
@@ -743,7 +911,7 @@ ${urls.map(url => `  <url>
 `;
 }
 
-for (const article of newArticles) {
+for (const article of [...newArticles, ...quickWinArticles]) {
   const dir = join(root, 'guides', article.slug);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, 'index.html'), renderArticle(article));
@@ -752,4 +920,4 @@ for (const article of newArticles) {
 writeFileSync(join(root, 'guides', 'index.html'), renderIndex());
 writeFileSync(join(root, 'sitemap.xml'), renderSitemap());
 
-console.log(`Generated ${newArticles.length} guide pages, guides/index.html, and sitemap.xml.`);
+console.log(`Generated ${newArticles.length + quickWinArticles.length} guide pages, guides/index.html, and sitemap.xml.`);
