@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Guides for Mental Loops, Rumination, and Work Stress - Rewire</title>
+  <meta name="description" content="Practical Rewire guides for specific mental loops: replaying conversations, leaving work at work, overthinking, and after-hours stress.">
+  <meta name="theme-color" content="#13223F">
+  <meta property="og:title" content="Guides for Mental Loops - Rewire">
+  <meta property="og:description" content="Specific, practical guides for the loops people quietly search for at night.">
+  <meta property="og:url" content="https://rewiremission.com/guides/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://rewiremission.com/guides/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Rewire Guides",
+      "url": "https://rewiremission.com/guides/",
+      "description": "Practical Rewire guides for specific mental loops, rumination, and work stress.",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "url": "https://rewiremission.com/guides/stop-replaying-conversations/",
+            "name": "How to Stop Replaying Conversations in Your Head"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "url": "https://rewiremission.com/guides/leave-work-at-work/",
+            "name": "How to Leave Work at Work When Your Mind Keeps Working"
+          }
+        ]
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #13223F;
+      --ink-bright: #F2F1EF;
+      --ink: rgba(235, 235, 235, 0.74);
+      --ink-muted: rgba(235, 235, 235, 0.58);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(65% 50% at 12% 0%, rgba(28, 25, 80, 0.34), transparent 70%),
+        radial-gradient(55% 45% at 92% 100%, rgba(46, 33, 102, 0.26), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .corner {
+      position: fixed;
+      top: 1.9rem;
+      z-index: 60;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(235, 235, 235, 0.55);
+      transition: color 0.4s ease;
+    }
+
+    .corner:hover { color: var(--ink-bright); }
+    .corner.brand { left: clamp(1.5rem, 5vw, 3rem); color: rgba(235, 235, 235, 0.68); }
+    .corner.contact { right: clamp(1.5rem, 5vw, 3rem); }
+    a:focus-visible { outline: 1px solid rgba(235, 235, 235, 0.42); outline-offset: 4px; }
+
+    .page {
+      max-width: 64rem;
+      margin: 0 auto;
+      padding: 9.5rem clamp(1.5rem, 6vw, 3rem) 5rem;
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: rgba(199, 208, 244, 0.72);
+      margin-bottom: 1.4rem;
+    }
+
+    h1 {
+      max-width: 10em;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      color: var(--ink-bright);
+      text-wrap: balance;
+    }
+
+    .dek {
+      max-width: 39em;
+      margin-top: 1.6rem;
+      font-size: clamp(1.03rem, 1.4vw, 1.16rem);
+      line-height: 1.85;
+      color: var(--ink-muted);
+      text-wrap: pretty;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 4rem;
+    }
+
+    .guide-card {
+      min-height: 18rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1.45rem;
+      color: inherit;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.035);
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.25s ease;
+    }
+
+    .guide-card:hover {
+      border-color: rgba(199, 208, 244, 0.34);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-3px);
+    }
+
+    .guide-card .topic {
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(199, 208, 244, 0.72);
+    }
+
+    .guide-card h2 {
+      margin-top: 3rem;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.7rem, 2.9vw, 2.3rem);
+      line-height: 1.15;
+      color: var(--ink-bright);
+      text-wrap: balance;
+    }
+
+    .guide-card p {
+      margin-top: 1rem;
+      font-size: 0.98rem;
+      line-height: 1.75;
+      color: var(--ink-muted);
+      text-wrap: pretty;
+    }
+
+    footer {
+      margin-top: 6rem;
+      padding-top: 2.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.52);
+      line-height: 2.15;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover { color: var(--ink-bright); }
+    footer .sep { margin: 0 0.7em; }
+
+    @media (max-width: 720px) {
+      .corner { top: 1.5rem; }
+      .guide-grid { grid-template-columns: 1fr; }
+      .guide-card { min-height: 15rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="corner brand" href="/">Rewire</a>
+  <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
+
+  <main class="page">
+    <p class="eyebrow">Guides</p>
+    <h1>Tools for the loops that keep running.</h1>
+    <p class="dek">Rewire is built for specific mental patterns: the argument that replays after midnight, the workday that follows you into bed, and the small loops that quietly shape who you become.</p>
+
+    <div class="guide-grid">
+      <a class="guide-card" href="/guides/stop-replaying-conversations/">
+        <span class="topic">Rumination</span>
+        <div>
+          <h2>How to stop replaying conversations in your head</h2>
+          <p>A practical reset for post-conversation overthinking, social anxiety loops, and arguments your brain keeps reopening.</p>
+        </div>
+      </a>
+
+      <a class="guide-card" href="/guides/leave-work-at-work/">
+        <span class="topic">Work stress</span>
+        <div>
+          <h2>How to leave work at work when your mind keeps working</h2>
+          <p>A shutdown ritual for unfinished tasks, after-hours checking, Sunday dread, and the mental noise that follows you home.</p>
+        </div>
+      </a>
+    </div>
+
+    <footer>
+      <a href="/">Home</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><br>
+      &copy; 2026 Kramer Ventures GmbH<br>Based in Zurich, Switzerland
+    </footer>
+  </main>
+
+</body>
+</html>
