@@ -15,7 +15,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     /* ============================================================
@@ -372,11 +372,10 @@
 
     /* the signature — written by hand, signed when you reach it */
     .blob .sig {
-      font-family: 'Mrs Saint Delafield', cursive;
-      font-size: 2.3em;
-      line-height: 1.25;
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.9em;
+      line-height: 1.3;
       color: rgba(248, 248, 250, 0.97);
-      -webkit-text-stroke: 0.45px rgba(248, 248, 250, 0.85);
       text-shadow: 0 0 22px rgba(150, 170, 240, 0.3);
       margin-top: 1.1em;
       transform: rotate(-2.5deg);
@@ -397,137 +396,6 @@
     /* words brighten as you read */
     .js .blob .w { opacity: 0.22; transition: opacity 0.7s ease; }
     .js .blob .w.on { opacity: 1; }
-
-    /* ============ Guides ============ */
-    .guides {
-      padding: 18vh clamp(1.5rem, 7vw, 5rem) 20vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .guides .label {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.44em;
-      text-indent: 0.44em;
-      text-transform: uppercase;
-      color: rgba(235, 235, 235, 0.62);
-      margin-bottom: 2.4rem;
-    }
-
-    .guides h2 {
-      max-width: 10em;
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(2rem, 4.9vw, 3.55rem);
-      line-height: 1.18;
-      letter-spacing: -0.01em;
-      color: var(--ink-bright);
-      text-wrap: balance;
-    }
-
-    .guides .intro {
-      margin-top: 1.6rem;
-      max-width: 34em;
-      font-size: clamp(0.97rem, 1.3vw, 1.07rem);
-      line-height: 1.85;
-      color: var(--ink-muted);
-      text-wrap: pretty;
-    }
-
-    .guide-grid {
-      width: min(100%, 58rem);
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-      margin-top: 3.2rem;
-      text-align: left;
-    }
-
-    .guide-card {
-      min-height: 17rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1.4rem;
-      color: inherit;
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.035);
-      transition: border-color 0.3s ease, background 0.3s ease, transform 0.25s ease;
-    }
-
-    .guide-card:hover {
-      border-color: rgba(199, 208, 244, 0.34);
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-3px);
-    }
-
-    .guide-card .topic {
-      font-size: 0.66rem;
-      font-weight: 500;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(199, 208, 244, 0.72);
-    }
-
-    .guide-card h3 {
-      margin-top: 2.8rem;
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(1.55rem, 2.5vw, 2rem);
-      line-height: 1.18;
-      color: var(--ink-bright);
-      text-wrap: balance;
-    }
-
-    .guide-card p {
-      margin-top: 1rem;
-      font-size: 0.96rem;
-      line-height: 1.7;
-      color: var(--ink-muted);
-      text-wrap: pretty;
-    }
-
-    .guide-more {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 1.8rem;
-      color: rgba(235, 235, 235, 0.78);
-      text-decoration: none;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      transition: color 0.3s ease;
-    }
-
-    .guide-more:hover { color: var(--ink-bright); }
-
-    .tool-link {
-      margin-top: 1.5rem;
-      font-size: clamp(0.97rem, 1.3vw, 1.07rem);
-      line-height: 1.85;
-      color: var(--ink-muted);
-      max-width: 34em;
-    }
-
-    .tool-link a {
-      color: rgba(242, 241, 239, 0.9);
-      text-decoration: underline;
-      text-underline-offset: 4px;
-      text-decoration-color: rgba(199, 208, 244, 0.36);
-      transition: color 0.3s ease, text-decoration-color 0.3s ease;
-    }
-
-    .tool-link a:hover {
-      color: #fff;
-      text-decoration-color: rgba(199, 208, 244, 0.72);
-    }
 
     /* ============ Download ============ */
     .download {
@@ -627,9 +495,6 @@
       .manifesto { padding: 15vh 1.6rem 17vh; }
       .manifesto .label { margin-bottom: 4.5rem; }
       .blob { font-size: 1.36rem; line-height: 1.68; }
-      .guides { padding: 14vh 1.5rem 16vh; }
-      .guide-grid { grid-template-columns: 1fr; }
-      .guide-card { min-height: 15rem; }
       .corner { top: 1.5rem; }
       .download { min-height: 88svh; }
       .legal { line-height: 2.3; }
@@ -674,38 +539,13 @@
     <section class="manifesto">
       <p class="label rise">Our manifesto</p>
       <div class="blob" id="blob">
-        <p>Your mind runs on software you never wrote — habits, fears, the story of who you are, installed by repetition and accident. None of it chosen.</p>
-        <p>Willpower steers about 5% of you. The other 95% only listens in the quiet states — so that is where we write: clinical hypnotherapy, CBT and neural audio, composed word by word for one mind. <em>Yours.</em></p>
-        <p>We're building Rewire to give every mind the tools to rewrite itself — so who you become is chosen, not inherited.</p>
+        <p>Your mind runs on software you never wrote. Habits, fears, the story of who you are — installed by repetition and accident. None of it chosen.</p>
+        <p>Willpower steers about 5% of you. The other 95% listens only in the quiet states, so that is where we write — clinical hypnotherapy, CBT, and neural audio, composed word by word for one mind. <em>Yours.</em></p>
+        <p>We're building Rewire to give every mind the tools to rewrite itself — so the person you become is chosen, not inherited.</p>
         <p>This is not self-help. <em>This is mind engineering.</em></p>
         <span class="sig-watch" aria-hidden="true"></span>
         <p class="sig">Rewire Team</p>
       </div>
-    </section>
-
-    <!-- ============ Guides ============ -->
-    <section class="guides">
-      <p class="label rise">Guides</p>
-      <h2 class="rise">Specific loops deserve specific tools.</h2>
-      <p class="intro rise d1">Start with the moments people quietly search for at night: the conversation that will not stop replaying, and the workday that follows you home.</p>
-      <div class="guide-grid rise d2">
-        <a class="guide-card" href="/guides/stop-replaying-conversations/">
-          <span class="topic">Rumination</span>
-          <div>
-            <h3>How to stop replaying conversations in your head</h3>
-            <p>A practical reset for post-conversation overthinking, social anxiety loops, and arguments your brain keeps reopening.</p>
-          </div>
-        </a>
-        <a class="guide-card" href="/guides/leave-work-at-work/">
-          <span class="topic">Work stress</span>
-          <div>
-            <h3>How to leave work at work when your mind keeps working</h3>
-            <p>A shutdown ritual for unfinished tasks, after-hours checking, Sunday dread, and the mental noise that follows you home.</p>
-          </div>
-        </a>
-      </div>
-      <a class="guide-more rise d2" href="/guides/">Explore all guides</a>
-      <p class="tool-link rise d2">Caught in a text spiral? Try the free <a href="/tools/should-i-text-them/">Should I text them?</a> reset.</p>
     </section>
 
     <!-- ============ Download ============ -->
@@ -715,11 +555,11 @@
         <div class="cta-row rise d1">
           <a class="store" href="https://apps.apple.com/us/app/rewire-mind-engineering/id6761954999" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.03 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702"/></svg>
-            Download Beta for iPhone
+            Download Now
           </a>
         </div>
         <p class="legal rise d2">
-          <a href="/tools/">Tools</a><span class="sep">·</span><a href="/guides/">Guides</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><a href="mailto:team@rewiremission.com">Contact</a>
+          <a href="/tools/">Tools</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><a href="mailto:team@rewiremission.com">Contact</a>
         </p>
         <p class="legal second rise d2">© 2026 Kramer Ventures GmbH<br>Based in Zürich, Switzerland</p>
       </div>
@@ -948,7 +788,7 @@ void main() {
         }
       });
     }, { threshold: 0.25 });
-    document.querySelectorAll('.manifesto, .guides, .download').forEach(c => io.observe(c));
+    document.querySelectorAll('.manifesto, .download').forEach(c => io.observe(c));
 
     /* the signature signs itself when you reach it.
        NOTE: we observe a sentinel above it — the signature itself is
