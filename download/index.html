@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Download Rewire — Mind Engineering</title>
+  <meta name="description" content="Download Rewire for iPhone. Audio sessions built from clinical hypnotherapy, CBT, and neural audio. Android coming soon.">
+  <meta name="theme-color" content="#13223F">
+  <meta property="og:title" content="Download Rewire">
+  <meta property="og:description" content="Rewire for iPhone is here. Android coming soon.">
+  <meta property="og:url" content="https://rewiremission.com/download/">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://rewiremission.com/download/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #13223F;
+      --ink-bright: #F2F1EF;
+      --ink-muted: rgba(235, 235, 235, 0.60);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: rgba(235, 235, 235, 0.68);
+      font-family: var(--sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
+
+    /* drifting pools of light, as on the homepage */
+    .drift {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .drift i {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      filter: blur(48px);
+    }
+
+    .drift .a {
+      width: 72vmax; height: 56vmax;
+      left: -20%; top: -24%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(70, 90, 135, 0.45), transparent 70%);
+      animation: driftA 55s ease-in-out infinite alternate;
+    }
+
+    .drift .b {
+      width: 62vmax; height: 50vmax;
+      right: -20%; bottom: -22%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(58, 72, 112, 0.40), transparent 70%);
+      animation: driftB 70s ease-in-out infinite alternate;
+    }
+
+    .drift .c {
+      width: 40vmax; height: 32vmax;
+      left: 2%; bottom: -14%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(48, 116, 128, 0.30), transparent 70%);
+      animation: driftC 45s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftA { to { transform: translate(9%, 12%) scale(1.18); } }
+    @keyframes driftB { to { transform: translate(-10%, -10%) scale(1.12); } }
+    @keyframes driftC { to { transform: translate(13%, -12%) scale(1.2); } }
+
+    /* film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .corner {
+      position: fixed;
+      top: 1.9rem;
+      z-index: 60;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(235, 235, 235, 0.55);
+      transition: color 0.4s ease;
+    }
+    .corner:hover { color: var(--ink-bright); }
+    .corner.brand { left: clamp(1.5rem, 5vw, 3rem); color: rgba(235, 235, 235, 0.68); }
+    .corner.contact { right: clamp(1.5rem, 5vw, 3rem); }
+
+    a:focus-visible { outline: 1px solid rgba(235, 235, 235, 0.42); outline-offset: 5px; }
+
+    .page {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem clamp(1.5rem, 7vw, 5rem) 4rem;
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.44em;
+      text-indent: 0.44em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.66);
+      margin-bottom: 2.2rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+      line-height: 1.12;
+      letter-spacing: -0.012em;
+      color: var(--ink-bright);
+      text-wrap: balance;
+    }
+
+    .sub {
+      margin-top: 1.6rem;
+      font-size: clamp(0.97rem, 1.3vw, 1.07rem);
+      line-height: 1.85;
+      color: var(--ink-muted);
+      max-width: 30em;
+      text-wrap: pretty;
+    }
+
+    .store {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: #ECEBE9;
+      color: #0D0D0D;
+      text-decoration: none;
+      font-size: 0.98rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      padding: 1.12rem 2.6rem;
+      border-radius: 999px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      margin-top: 3rem;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.4s ease;
+    }
+    .store:hover { background: #fff; box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55); }
+    .store:active { transform: scale(0.985); }
+
+    .store svg { width: 1.05em; height: 1.05em; display: block; margin-top: -2px; }
+
+    .android {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-top: 1.6rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-indent: 0.3em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.45);
+    }
+
+    footer {
+      margin-top: 7rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(235, 235, 235, 0.52);
+      line-height: 2.15;
+    }
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover { color: var(--ink-bright); }
+    footer .sep { margin: 0 0.7em; }
+
+    @media (max-width: 640px) {
+      .drift i { filter: blur(34px); }
+      .corner { top: 1.5rem; }
+      footer { margin-top: 5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .drift i { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+
+  <a class="corner brand" href="/">Rewire</a>
+  <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
+
+  <main class="page">
+    <p class="eyebrow">Mind engineering</p>
+    <h1>Get Rewire.</h1>
+    <p class="sub">Audio sessions composed word by word for one mind — yours. Free to try on iPhone.</p>
+
+    <a class="store" href="https://apps.apple.com/us/app/rewire-mind-engineering/id6761954999" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.03 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702"/></svg>
+      Download for iPhone
+    </a>
+
+    <p class="android">Android — coming soon</p>
+
+    <footer>
+      <a href="/">Home</a><span class="sep">·</span><a href="/tools/">Tools</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><br>
+      © 2026 Kramer Ventures GmbH<br>Based in Zürich, Switzerland
+    </footer>
+  </main>
+
+</body>
+</html>
