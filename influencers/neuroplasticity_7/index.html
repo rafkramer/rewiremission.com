@@ -205,13 +205,17 @@
       color: transparent;
     }
 
+    /* one sentence per line, always */
     .sub {
       margin-top: 1.7rem;
-      font-size: clamp(1rem, 1.4vw, 1.12rem);
+      font-size: min(1.12rem, 4vw);
       line-height: 1.75;
       color: var(--ink-muted);
-      max-width: 24em;
-      text-wrap: balance;
+    }
+
+    .sub span {
+      display: block;
+      white-space: nowrap;
     }
 
     .cta-row {
@@ -302,7 +306,6 @@
       .corner { top: 1.5rem; }
       .cta-row { flex-direction: column; }
       .banner { margin-bottom: 2rem; }
-      .sub { font-size: 0.99rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -326,7 +329,7 @@
       <span class="tile"><img src="rewire.jpg" alt="" width="24" height="24"></span>
     </div>
     <h1 class="rise d1">Try Rewire <em>for free.</em></h1>
-    <p class="sub rise d2">Neuroplasticity is gifting you a free trial. Access &amp; reprogram your subconscious mind today.</p>
+    <p class="sub rise d2"><span>Neuroplasticity is gifting you a free trial.</span><span>Access &amp; reprogram your subconscious mind.</span></p>
 
     <div class="cta-row rise d2">
       <a class="store" href="https://appstack.link/tjFvD0Ax?media_source=Influencers&campaign_name=%40neuroplasticity_7+Instagram&campaign_id=a4336083-c3a6-4d7e-8d49-00eaa0d5b132" rel="noopener">
