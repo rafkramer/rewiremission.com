@@ -157,6 +157,33 @@
       padding: 6rem clamp(1.5rem, 7vw, 5rem) 4rem;
     }
 
+    /* the lil banner - two app icons, side by side */
+    .banner {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.6rem;
+    }
+
+    .banner .tile {
+      display: block;
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+    }
+
+    .banner .tile svg { display: block; width: 100%; height: 100%; }
+
+    .banner .times {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 1.05rem;
+      color: rgba(235, 235, 235, 0.55);
+    }
+
     h1 {
       font-family: var(--serif);
       font-weight: 400;
@@ -178,10 +205,10 @@
     .sub {
       margin-top: 1.7rem;
       font-size: clamp(1rem, 1.4vw, 1.12rem);
-      line-height: 1.85;
+      line-height: 1.75;
       color: var(--ink-muted);
-      max-width: 28em;
-      text-wrap: pretty;
+      max-width: 24em;
+      text-wrap: balance;
     }
 
     .cta-row {
@@ -271,6 +298,9 @@
       .drift i { filter: blur(34px); }
       .corner { top: 1.5rem; }
       .cta-row { flex-direction: column; }
+      .banner { margin-bottom: 2.2rem; }
+      .banner .tile { width: 52px; height: 52px; border-radius: 12px; }
+      .sub { font-size: 0.99rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -288,8 +318,69 @@
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
   <main class="page">
+    <div class="banner rise" aria-hidden="true">
+      <span class="tile">
+        <svg viewBox="0 0 64 64">
+          <defs>
+            <radialGradient id="fbg" cx="50%" cy="42%" r="75%">
+              <stop offset="0%" stop-color="#A34A50"/>
+              <stop offset="60%" stop-color="#933F45"/>
+              <stop offset="100%" stop-color="#7C3138"/>
+            </radialGradient>
+            <linearGradient id="fpet" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8E252C"/>
+              <stop offset="100%" stop-color="#6E181E"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" fill="url(#fbg)"/>
+          <g transform="translate(32 33)">
+            <g id="fp">
+              <path d="M0,-3 C -7,-8 -12,-16 -9,-23 C -6,-29 6,-29 9,-23 C 12,-16 7,-8 0,-3 Z"
+                fill="url(#fpet)" stroke="rgba(255,255,255,0.75)" stroke-width="0.5"/>
+            </g>
+            <use href="#fp" transform="rotate(72)"/>
+            <use href="#fp" transform="rotate(144)"/>
+            <use href="#fp" transform="rotate(216)"/>
+            <use href="#fp" transform="rotate(288)"/>
+            <circle r="4.2" fill="#6E181E"/>
+            <g fill="#E7C04B">
+              <circle cx="0" cy="-2.3" r="0.8"/><circle cx="2.2" cy="-0.7" r="0.8"/>
+              <circle cx="1.4" cy="1.9" r="0.8"/><circle cx="-1.4" cy="1.9" r="0.8"/>
+              <circle cx="-2.2" cy="-0.7" r="0.8"/><circle cx="0" cy="0" r="0.7"/>
+            </g>
+          </g>
+        </svg>
+      </span>
+      <span class="times">&times;</span>
+      <span class="tile">
+        <svg viewBox="0 0 64 64">
+          <defs>
+            <linearGradient id="rbg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#8996B1"/>
+              <stop offset="100%" stop-color="#525F7D"/>
+            </linearGradient>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="1.1" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="64" height="64" fill="url(#rbg)"/>
+          <g filter="url(#glow)" stroke="#FFFFFF" stroke-linecap="round" fill="#FFFFFF">
+            <line x1="32" y1="32" x2="41" y2="10" stroke-width="1.5"/><circle cx="41" cy="10" r="2.4"/>
+            <line x1="32" y1="32" x2="50" y2="21" stroke-width="0.9"/><circle cx="50" cy="21" r="1.3"/>
+            <line x1="32" y1="32" x2="53" y2="41" stroke-width="1.4"/><circle cx="53" cy="41" r="2.2"/>
+            <line x1="32" y1="32" x2="42" y2="52" stroke-width="0.9"/><circle cx="42" cy="52" r="1.2"/>
+            <line x1="32" y1="32" x2="24" y2="53" stroke-width="1.3"/><circle cx="24" cy="53" r="2"/>
+            <line x1="32" y1="32" x2="13" y2="42" stroke-width="0.9"/><circle cx="13" cy="42" r="1.3"/>
+            <line x1="32" y1="32" x2="11" y2="23" stroke-width="1.4"/><circle cx="11" cy="23" r="2.2"/>
+            <line x1="32" y1="32" x2="23" y2="12" stroke-width="0.9"/><circle cx="23" cy="12" r="1.2"/>
+            <circle cx="32" cy="32" r="3.6"/>
+          </g>
+        </svg>
+      </span>
+    </div>
     <h1 class="rise d1">Try Rewire <em>for free.</em></h1>
-    <p class="sub rise d2">Access &amp; reprogram your subconscious mind with our new app - Rewire. Now available for free.</p>
+    <p class="sub rise d2">Access &amp; reprogram your subconscious mind with our new app: Rewire.</p>
 
     <div class="cta-row rise d2">
       <a class="store" href="https://appstack.link/tjFvD0Ax?media_source=Influencers&campaign_name=%40neuroplasticity_7+Instagram&campaign_id=a4336083-c3a6-4d7e-8d49-00eaa0d5b132" rel="noopener">
