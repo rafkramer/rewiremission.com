@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Try Rewire free</title>
+  <meta name="description" content="Try Rewire for free. Access & reprogram your subconscious mind.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#13223F">
+  <meta property="og:title" content="Try Rewire free">
+  <meta property="og:description" content="Access & reprogram your subconscious mind.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    :root {
+      --bg: #13223F;
+      --ink-bright: #F2F1EF;
+      --ink-muted: rgba(235, 235, 235, 0.60);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: rgba(235, 235, 235, 0.68);
+      font-family: var(--sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
+
+    /* drifting pools of light */
+    .drift {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .drift i {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      filter: blur(48px);
+    }
+
+    .drift .a {
+      width: 72vmax; height: 56vmax;
+      left: -20%; top: -24%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(70, 90, 135, 0.45), transparent 70%);
+      animation: driftA 55s ease-in-out infinite alternate;
+    }
+
+    .drift .b {
+      width: 62vmax; height: 50vmax;
+      right: -20%; bottom: -22%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(58, 72, 112, 0.40), transparent 70%);
+      animation: driftB 70s ease-in-out infinite alternate;
+    }
+
+    .drift .c {
+      width: 40vmax; height: 32vmax;
+      left: 2%; bottom: -14%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(48, 116, 128, 0.30), transparent 70%);
+      animation: driftC 45s ease-in-out infinite alternate;
+    }
+
+    .drift .d {
+      width: 34vmax; height: 28vmax;
+      right: 2%; top: -12%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(134, 216, 223, 0.10), transparent 70%);
+      animation: driftD 60s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftA { to { transform: translate(9%, 12%) scale(1.18); } }
+    @keyframes driftB { to { transform: translate(-10%, -10%) scale(1.12); } }
+    @keyframes driftC { to { transform: translate(13%, -12%) scale(1.2); } }
+    @keyframes driftD { to { transform: translate(-12%, 14%) scale(1.15); } }
+
+    /* the breathing halo */
+    .halo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 74vmin;
+      height: 74vmin;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .halo .core {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%,
+          rgba(134, 216, 223, 0.075) 0%,
+          rgba(90, 84, 175, 0.13) 26%,
+          rgba(42, 30, 92, 0.16) 46%,
+          rgba(25, 22, 69, 0.10) 62%,
+          transparent 74%);
+      filter: blur(26px);
+      animation: breathe 7.5s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.82; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    /* film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .corner {
+      position: fixed;
+      top: 1.9rem;
+      z-index: 60;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(235, 235, 235, 0.55);
+      transition: color 0.4s ease;
+    }
+    .corner:hover { color: var(--ink-bright); }
+    .corner.brand { left: clamp(1.5rem, 5vw, 3rem); color: rgba(235, 235, 235, 0.68); }
+    .corner.contact { right: clamp(1.5rem, 5vw, 3rem); }
+
+    a:focus-visible { outline: 1px solid rgba(235, 235, 235, 0.42); outline-offset: 5px; }
+
+    .page {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem clamp(1.5rem, 7vw, 5rem) 4rem;
+    }
+
+    /* the collab banner - a quiet little pill */
+    .banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.4rem 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      margin-bottom: 2.4rem;
+    }
+
+    .banner .tile {
+      display: block;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .banner .tile svg { display: block; width: 100%; height: 100%; }
+
+    .banner .times {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 0.72rem;
+      color: rgba(235, 235, 235, 0.42);
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      line-height: 1.1;
+      letter-spacing: -0.012em;
+      color: var(--ink-bright);
+      text-wrap: balance;
+    }
+
+    h1 em {
+      font-style: italic;
+      background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 50%, #9FB3ED 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sub {
+      margin-top: 1.7rem;
+      font-size: clamp(1rem, 1.4vw, 1.12rem);
+      line-height: 1.75;
+      color: var(--ink-muted);
+      max-width: 24em;
+      text-wrap: balance;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 3.2rem;
+    }
+
+    .store {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: #ECEBE9;
+      color: #0D0D0D;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      padding: 1.15rem 2.8rem;
+      border-radius: 999px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(150, 170, 240, 0.12);
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.4s ease;
+    }
+    .store:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55), 0 0 80px rgba(150, 170, 240, 0.18);
+    }
+    .store:active { transform: scale(0.985); }
+
+    .store svg { width: 1.05em; height: 1.05em; display: block; margin-top: -2px; }
+
+    /* the Android button - same shape, but waiting its turn */
+    .store.android-btn {
+      background: transparent;
+      color: rgba(235, 235, 235, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: none;
+      cursor: default;
+    }
+    .store.android-btn:hover {
+      background: transparent;
+      transform: none;
+      box-shadow: none;
+    }
+    .store.android-btn svg { opacity: 0.55; }
+
+    footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: max(1.1rem, env(safe-area-inset-bottom));
+      text-align: center;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: rgba(235, 235, 235, 0.28);
+    }
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover { color: rgba(235, 235, 235, 0.6); }
+    footer .sep { margin: 0 0.55em; }
+
+    /* soft entrance */
+    .js .rise {
+      opacity: 0;
+      transform: translateY(20px);
+      filter: blur(8px);
+      transition:
+        opacity 1.3s ease,
+        transform 1.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+        filter 1.3s ease;
+    }
+    .js .rise.d1 { transition-delay: 0.18s; }
+    .js .rise.d2 { transition-delay: 0.36s; }
+    .js .rise.d3 { transition-delay: 0.54s; }
+    .js .in .rise { opacity: 1; transform: none; filter: blur(0); }
+
+    @media (max-width: 640px) {
+      .halo { width: 96vmin; height: 96vmin; }
+      .drift i { filter: blur(34px); }
+      .corner { top: 1.5rem; }
+      .cta-row { flex-direction: column; }
+      .banner { margin-bottom: 2rem; }
+      .sub { font-size: 0.99rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .drift i, .halo .core { animation: none; }
+      .js .rise { opacity: 1; transform: none; filter: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
+  <div class="halo" aria-hidden="true"><div class="core"></div></div>
+
+  <a class="corner brand" href="/">Rewire</a>
+  <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
+
+  <main class="page">
+    <div class="banner rise" aria-hidden="true">
+      <span class="tile">
+        <svg viewBox="0 0 64 64">
+          <defs>
+            <radialGradient id="fbg" cx="50%" cy="42%" r="75%">
+              <stop offset="0%" stop-color="#A34A50"/>
+              <stop offset="60%" stop-color="#933F45"/>
+              <stop offset="100%" stop-color="#7C3138"/>
+            </radialGradient>
+            <linearGradient id="fpet" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8E252C"/>
+              <stop offset="100%" stop-color="#6E181E"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" fill="url(#fbg)"/>
+          <g transform="translate(32 33)">
+            <g id="fp">
+              <path d="M0,-3 C -7,-8 -12,-16 -9,-23 C -6,-29 6,-29 9,-23 C 12,-16 7,-8 0,-3 Z"
+                fill="url(#fpet)" stroke="rgba(255,255,255,0.75)" stroke-width="0.5"/>
+            </g>
+            <use href="#fp" transform="rotate(72)"/>
+            <use href="#fp" transform="rotate(144)"/>
+            <use href="#fp" transform="rotate(216)"/>
+            <use href="#fp" transform="rotate(288)"/>
+            <circle r="4.2" fill="#6E181E"/>
+            <g fill="#E7C04B">
+              <circle cx="0" cy="-2.3" r="0.8"/><circle cx="2.2" cy="-0.7" r="0.8"/>
+              <circle cx="1.4" cy="1.9" r="0.8"/><circle cx="-1.4" cy="1.9" r="0.8"/>
+              <circle cx="-2.2" cy="-0.7" r="0.8"/><circle cx="0" cy="0" r="0.7"/>
+            </g>
+          </g>
+        </svg>
+      </span>
+      <span class="times">&times;</span>
+      <span class="tile">
+        <svg viewBox="0 0 64 64">
+          <defs>
+            <linearGradient id="rbg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#8996B1"/>
+              <stop offset="100%" stop-color="#525F7D"/>
+            </linearGradient>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="1.1" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="64" height="64" fill="url(#rbg)"/>
+          <g filter="url(#glow)" stroke="#FFFFFF" stroke-linecap="round" fill="#FFFFFF">
+            <line x1="32" y1="32" x2="41" y2="10" stroke-width="1.5"/><circle cx="41" cy="10" r="2.4"/>
+            <line x1="32" y1="32" x2="50" y2="21" stroke-width="0.9"/><circle cx="50" cy="21" r="1.3"/>
+            <line x1="32" y1="32" x2="53" y2="41" stroke-width="1.4"/><circle cx="53" cy="41" r="2.2"/>
+            <line x1="32" y1="32" x2="42" y2="52" stroke-width="0.9"/><circle cx="42" cy="52" r="1.2"/>
+            <line x1="32" y1="32" x2="24" y2="53" stroke-width="1.3"/><circle cx="24" cy="53" r="2"/>
+            <line x1="32" y1="32" x2="13" y2="42" stroke-width="0.9"/><circle cx="13" cy="42" r="1.3"/>
+            <line x1="32" y1="32" x2="11" y2="23" stroke-width="1.4"/><circle cx="11" cy="23" r="2.2"/>
+            <line x1="32" y1="32" x2="23" y2="12" stroke-width="0.9"/><circle cx="23" cy="12" r="1.2"/>
+            <circle cx="32" cy="32" r="3.6"/>
+          </g>
+        </svg>
+      </span>
+    </div>
+    <h1 class="rise d1">Try Rewire <em>for free.</em></h1>
+    <p class="sub rise d2">Access &amp; reprogram your subconscious mind with our new app: Rewire.</p>
+
+    <div class="cta-row rise d2">
+      <a class="store" href="https://appstack.link/tjFvD0Ax?media_source=Influencers&campaign_name=%40neuroplasticity_7+Instagram&campaign_id=a4336083-c3a6-4d7e-8d49-00eaa0d5b132" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.03 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702"/></svg>
+        Download Now
+      </a>
+      <span class="store android-btn" aria-disabled="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.523 15.341a.998.998 0 1 1 0-1.996.998.998 0 0 1 0 1.996m-11.046 0a.998.998 0 1 1 0-1.996.998.998 0 0 1 0 1.996m11.405-6.02 1.997-3.46a.416.416 0 0 0-.152-.567.416.416 0 0 0-.568.152l-2.022 3.503A12.47 12.47 0 0 0 12 7.921c-1.848 0-3.594.375-5.137 1.028L4.841 5.446a.416.416 0 0 0-.568-.152.416.416 0 0 0-.152.567l1.997 3.46C2.688 11.23.343 14.258 0 17.914h24c-.344-3.656-2.688-6.684-6.118-8.593"/></svg>
+        Android coming soon
+      </span>
+    </div>
+  </main>
+
+  <footer>
+    <a href="/">Home</a><span class="sep">·</span><a href="/privacy">Privacy</a><span class="sep">·</span><a href="/terms">Terms</a><span class="sep">·</span><span>© 2026 Kramer Ventures GmbH</span>
+  </footer>
+
+  <script>
+    setTimeout(() => document.querySelector('.page').classList.add('in'), 160);
+  </script>
+
+</body>
+</html>
