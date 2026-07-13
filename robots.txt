@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /dash
 
 Sitemap: https://rewiremission.com/sitemap.xml
