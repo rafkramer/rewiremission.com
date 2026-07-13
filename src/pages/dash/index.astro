@@ -1,0 +1,1249 @@
+---
+// Affiliate dashboard - sample data engine in src/scripts/affiliates.js,
+// labelled "Verified by AppStack" until the real API sync lands.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Rewire Affiliates - Dashboard</title>
+    <meta name="description" content="Your Rewire affiliate dashboard. Traffic, installs, trials, and earnings - verified by AppStack." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#13223F" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i></div>
+
+    <!-- login gate -->
+    <div class="gate" id="gate" hidden>
+      <form class="gate-card" id="gate-form">
+        <span class="tag">Rewire · Affiliates</span>
+        <h1>Welcome back.</h1>
+        <p>Enter your affiliate code to open your dashboard.</p>
+        <input id="gate-code" type="text" placeholder="Your affiliate code" autocomplete="off" spellcheck="false" />
+        <button type="submit">Open dashboard</button>
+        <p class="err" id="gate-err"></p>
+        <p class="hint">Preview build with sample data - try <b>NEURO7</b>, <b>MIA</b> or <b>CALM</b></p>
+      </form>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span class="word">Rewire</span>
+        <span class="tag">Affiliates</span>
+      </a>
+      <div class="who" id="who"></div>
+    </header>
+
+    <main id="main" hidden>
+      <div class="greet-row">
+        <div class="greet rise">
+          <h1 id="greet-h"></h1>
+          <p id="greet-p"></p>
+        </div>
+        <div class="range rise d1" id="range" role="tablist" aria-label="Date range">
+          <button data-days="7">7D</button>
+          <button data-days="30" class="on">30D</button>
+          <button data-days="90">90D</button>
+          <button data-days="0">All</button>
+        </div>
+      </div>
+
+      <div class="tiles" id="tiles"></div>
+
+      <div class="grid">
+        <div class="card rise d1 chart-card">
+          <div class="card-head">
+            <h2>Trends</h2>
+            <span class="label" id="chart-range-label"></span>
+          </div>
+          <div class="metric-tabs" id="metric-tabs" role="tablist" aria-label="Metric"></div>
+          <div class="chart-wrap" id="chart-wrap">
+            <svg id="chart" aria-label="Daily trend"></svg>
+            <div class="chart-tip" id="chart-tip"></div>
+          </div>
+          <div class="chart-meta" id="chart-meta"></div>
+        </div>
+
+        <div class="card rise d2 page-card">
+          <div class="card-head"><h2>Your page</h2><span class="handle-pill" id="page-handle"></span></div>
+          <div class="url-row">
+            <span class="url-box" id="page-url-text"></span>
+            <button class="mini-btn" id="copy-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+            <a class="mini-btn" id="open-btn" target="_blank" rel="noopener">Open</a>
+          </div>
+          <p class="page-note">This is your personal landing page. Every download and every dollar it drives is attributed to you through <a href="https://appstack.tech" target="_blank" rel="noopener">AppStack</a>.</p>
+          <div class="preview-frame" aria-hidden="true">
+            <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="addr" id="preview-addr"></span><span style="width:24px"></span></div>
+            <div class="preview-viewport"><iframe id="preview-iframe" tabindex="-1" title="Landing page preview" loading="lazy"></iframe></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card rise d2" style="margin-bottom:1.1rem">
+        <div class="card-head">
+          <h2>Performance</h2>
+          <a class="verified" href="https://appstack.tech" target="_blank" rel="noopener" title="Attribution and revenue data confirmed by AppStack">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            Verified by AppStack
+          </a>
+        </div>
+        <div class="appstack">
+          <div class="funnel" id="funnel"></div>
+          <div class="money" id="money"></div>
+        </div>
+      </div>
+
+      <div class="card rise d3">
+        <div class="card-head">
+          <h2>Payouts</h2>
+          <span class="label">Paid on the 1st, monthly</span>
+        </div>
+        <div class="payout-grid" id="payout-tiles"></div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>Month</th><th class="num">Verified revenue</th><th class="num">Your share</th><th class="num">Your cut</th><th style="text-align:right">Status</th></tr>
+            </thead>
+            <tbody id="payout-rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card refer rise d4" style="margin-top:1.1rem">
+        <div class="refer-copy">
+          <h2>Refer an affiliate, <em>earn $300.</em></h2>
+          <p>Know a creator who fits Rewire? Send them your invite link. Once they join the program and their first payout clears, a $300 bonus lands in your next payout.</p>
+        </div>
+        <div class="refer-action">
+          <div class="url-row">
+            <span class="url-box" id="refer-url"></span>
+            <button class="mini-btn" id="refer-copy-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <span class="refer-note">The link is tied to your account - we track the rest.</span>
+        </div>
+      </div>
+
+      <p class="foot rise d4">Preview build with sample data - live tracking activates with your onboarding.<br />Questions? <a href="mailto:team@rewiremission.com">team@rewiremission.com</a></p>
+    </main>
+
+    <style is:global>
+      :root {
+        --bg: #13223F;
+        --ink-bright: #F2F1EF;
+        --ink: rgba(235, 235, 235, 0.86);
+        --ink-muted: rgba(235, 235, 235, 0.60);
+        --ink-faint: rgba(235, 235, 235, 0.42);
+        --ink-ghost: rgba(235, 235, 235, 0.25);
+        --serif: 'Instrument Serif', Georgia, serif;
+        --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+        --accent: #86D8DF;
+        --card-bg: rgba(255, 255, 255, 0.035);
+        --card-line: rgba(255, 255, 255, 0.09);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: var(--bg);
+        color: var(--ink-muted);
+        font-family: var(--sans);
+        font-weight: 300;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
+
+      .drift { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+      .drift i { position: absolute; display: block; border-radius: 50%; filter: blur(52px); }
+      .drift .a {
+        width: 70vmax; height: 54vmax; left: -22%; top: -26%;
+        background: radial-gradient(50% 50% at 50% 50%, rgba(70, 90, 135, 0.38), transparent 70%);
+        animation: driftA 60s ease-in-out infinite alternate;
+      }
+      .drift .b {
+        width: 60vmax; height: 48vmax; right: -22%; bottom: -24%;
+        background: radial-gradient(50% 50% at 50% 50%, rgba(48, 116, 128, 0.22), transparent 70%);
+        animation: driftB 75s ease-in-out infinite alternate;
+      }
+      @keyframes driftA { to { transform: translate(8%, 10%) scale(1.15); } }
+      @keyframes driftB { to { transform: translate(-9%, -9%) scale(1.1); } }
+
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      a { color: inherit; }
+      a:focus-visible, button:focus-visible, input:focus-visible { outline: 1px solid var(--ink-faint); outline-offset: 4px; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.1rem clamp(1.2rem, 4vw, 2.6rem);
+        background: rgba(19, 34, 63, 0.72);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .brand { display: flex; align-items: baseline; gap: 0.7rem; text-decoration: none; }
+      .brand .word { font-family: var(--serif); font-size: 1.25rem; color: var(--ink-bright); letter-spacing: 0.01em; }
+      .brand .tag {
+        font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase;
+        color: rgba(134, 216, 223, 0.75);
+      }
+
+      .who { display: flex; align-items: center; gap: 0.85rem; }
+      .who .avatar {
+        width: 34px; height: 34px; border-radius: 50%;
+        overflow: hidden;
+        display: grid; place-items: center;
+        font-family: var(--serif); font-size: 1rem; color: #0f1c35;
+        background: linear-gradient(135deg, #C7D0F4, #86D8DF);
+      }
+      .who .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .who .meta { line-height: 1.25; text-align: right; }
+      .who .name { font-size: 0.86rem; font-weight: 500; color: var(--ink); }
+      .who .code { font-size: 0.72rem; letter-spacing: 0.03em; color: var(--ink-faint); }
+      .who button {
+        margin-left: 0.4rem;
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        color: var(--ink-faint);
+        font-family: var(--sans);
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.45rem 0.95rem;
+        cursor: pointer;
+        transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .who button:hover { color: var(--ink-bright); border-color: rgba(255, 255, 255, 0.32); }
+
+      main {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 2.8rem clamp(1.2rem, 4vw, 2.6rem) 4rem;
+      }
+
+      .greet-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .greet h1 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: clamp(1.9rem, 4.5vw, 2.9rem);
+        line-height: 1.12;
+        color: var(--ink-bright);
+      }
+      .greet h1 em {
+        font-style: italic;
+        background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 50%, #9FB3ED 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .greet p { margin-top: 0.5rem; font-size: 0.92rem; color: var(--ink-faint); }
+
+      .range {
+        display: inline-flex;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        padding: 0.22rem;
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .range button {
+        border: 0;
+        background: none;
+        color: var(--ink-faint);
+        font-family: var(--sans);
+        font-size: 0.74rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        padding: 0.5rem 1.05rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: color 0.25s ease, background 0.25s ease;
+      }
+      .range button.on { background: rgba(134, 216, 223, 0.14); color: var(--ink-bright); }
+      .range button:hover:not(.on) { color: var(--ink); }
+
+      .card {
+        border: 1px solid var(--card-line);
+        border-radius: 22px;
+        background: var(--card-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 1.6rem 1.7rem;
+      }
+
+      .card h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 1.35rem;
+        color: var(--ink-bright);
+        letter-spacing: 0.01em;
+      }
+      .card .card-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .label {
+        font-size: 0.64rem;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.1rem;
+        margin-bottom: 1.1rem;
+      }
+      @media (max-width: 1200px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+      .tile { padding: 1.35rem 1.5rem 1.3rem; }
+      .tile[data-metric] { cursor: pointer; transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease; }
+      .tile[data-metric]:hover { border-color: rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.055); transform: translateY(-1px); }
+      .tile .label { display: block; margin-bottom: 0.65rem; }
+      .tile .value {
+        font-family: var(--serif);
+        font-size: clamp(1.7rem, 3vw, 2.3rem);
+        line-height: 1;
+        color: var(--ink-bright);
+      }
+      .tile .delta { display: inline-block; margin-top: 0.6rem; font-size: 0.72rem; color: var(--ink-faint); }
+      .tile .delta.up { color: rgba(134, 223, 177, 0.85); }
+      .tile .delta.down { color: rgba(240, 160, 160, 0.85); }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 7fr 5fr;
+        gap: 1.1rem;
+        margin-bottom: 1.1rem;
+      }
+      .grid > *, .appstack > *, .tiles > * { min-width: 0; }
+
+      .handle-pill {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        padding: 0.32rem 0.75rem;
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        color: var(--ink-muted);
+        white-space: nowrap;
+      }
+
+      .page-card .url-row { display: flex; gap: 0.6rem; margin-bottom: 1.1rem; }
+      .url-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.18);
+        padding: 0.8rem 1rem;
+        font-size: 0.86rem;
+        color: var(--ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0.01em;
+      }
+      .mini-btn {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 0 1.1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+      }
+      .mini-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--ink-bright); }
+      .mini-btn.copied { border-color: rgba(134, 216, 223, 0.5); color: var(--accent); }
+      .mini-btn svg { width: 0.95em; height: 0.95em; }
+
+      .page-note { font-size: 0.78rem; line-height: 1.6; color: var(--ink-faint); }
+      .page-note a {
+        color: var(--ink-muted);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-color: rgba(235, 235, 235, 0.35);
+        transition: color 0.3s ease;
+      }
+      .page-note a:hover { color: var(--ink-bright); }
+
+      .preview-frame {
+        margin-top: 1.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        background: #0e1a33;
+      }
+      .preview-frame .chrome {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.55rem 0.9rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .preview-frame .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); }
+      .preview-frame .addr {
+        flex: 1;
+        text-align: center;
+        font-size: 0.66rem;
+        letter-spacing: 0.04em;
+        color: var(--ink-ghost);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .preview-viewport { position: relative; height: 300px; overflow: hidden; }
+      .preview-viewport iframe {
+        width: 200%;
+        height: 600px;
+        border: 0;
+        transform: scale(0.5);
+        transform-origin: 0 0;
+        pointer-events: none;
+      }
+
+      .chart-card { display: flex; flex-direction: column; }
+      .chart-card .card-head { margin-bottom: 1rem; }
+
+      .metric-tabs {
+        display: flex;
+        gap: 0.45rem;
+        overflow-x: auto;
+        margin-bottom: 1.1rem;
+        padding-bottom: 0.2rem;
+        scrollbar-width: none;
+      }
+      .metric-tabs::-webkit-scrollbar { display: none; }
+      .mtab {
+        flex: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: transparent;
+        color: var(--ink-faint);
+        font-family: var(--sans);
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        padding: 0.42rem 0.9rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+      }
+      .mtab:hover { color: var(--ink); }
+
+      .chart-wrap { position: relative; flex: 1; min-height: 250px; }
+      .chart-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+      .chart-tip {
+        position: absolute;
+        pointer-events: none;
+        background: rgba(14, 26, 51, 0.94);
+        border: 1px solid rgba(134, 216, 223, 0.25);
+        border-radius: 10px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.72rem;
+        color: var(--ink);
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+        transform: translate(-50%, -110%);
+        z-index: 5;
+      }
+      .chart-tip .t-views { color: var(--accent); font-weight: 500; }
+      .chart-meta {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1.15rem;
+        padding-top: 1.05rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .chart-meta .m .label { display: block; margin-bottom: 0.35rem; }
+      .chart-meta .m .v { font-family: var(--serif); font-size: 1.22rem; color: var(--ink-bright); }
+      .chart-meta .m .v small { font-family: var(--sans); font-size: 0.68rem; color: var(--ink-faint); margin-left: 0.35em; }
+      .chart-meta .m .v.up { color: #8CE0B7; }
+      .chart-meta .m .v.down { color: #F0A9A9; }
+      @media (max-width: 640px) { .chart-meta { grid-template-columns: repeat(2, 1fr); } }
+
+      .verified {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.38rem 0.85rem;
+        border: 1px solid rgba(134, 216, 223, 0.22);
+        border-radius: 999px;
+        background: rgba(134, 216, 223, 0.06);
+        font-size: 0.64rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(134, 216, 223, 0.85);
+        white-space: nowrap;
+      }
+      .verified svg { width: 1em; height: 1em; flex: none; }
+      a.verified { text-decoration: none; transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease; }
+      a.verified:hover { border-color: rgba(134, 216, 223, 0.5); background: rgba(134, 216, 223, 0.12); color: var(--accent); }
+
+      .appstack {
+        display: grid;
+        grid-template-columns: 7fr 5fr;
+        gap: 2.2rem;
+        margin-bottom: 1.1rem;
+      }
+      @media (max-width: 860px) { .appstack { grid-template-columns: 1fr; } }
+
+      .funnel .step { margin-bottom: 1.05rem; }
+      .funnel .step:last-child { margin-bottom: 0; }
+      .funnel .row1 { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; }
+      .funnel .row1 .n { font-size: 0.82rem; color: var(--ink); }
+      .funnel .row1 .v { font-family: var(--serif); font-size: 1.1rem; color: var(--ink-bright); }
+      .funnel .bar { height: 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+      .funnel .bar i {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(134, 216, 223, 0.85), rgba(159, 179, 237, 0.85));
+        transition: width 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .funnel .conv { margin-top: 0.3rem; font-size: 0.68rem; color: var(--ink-ghost); }
+
+      .money .m-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .money .m-row:first-child { padding-top: 0.1rem; }
+      .money .m-row .k { font-size: 0.82rem; color: var(--ink-muted); }
+      .money .m-row .v { font-family: var(--serif); font-size: 1.25rem; color: var(--ink-bright); }
+      .share-block {
+        margin-top: 1.2rem;
+        padding: 1rem 1.15rem 1.05rem;
+        border: 1px solid rgba(134, 216, 223, 0.16);
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(134, 216, 223, 0.05), rgba(159, 179, 237, 0.04));
+      }
+      .share-block .row1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+      }
+      .share-block .pct {
+        font-family: var(--serif);
+        font-size: 1.7rem;
+        line-height: 1;
+        background: linear-gradient(105deg, #A6E4EA 10%, #C7D0F4 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .share-bar {
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+      .share-bar i {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(134, 216, 223, 0.95), rgba(159, 179, 237, 0.95));
+        box-shadow: 0 0 14px rgba(134, 216, 223, 0.35);
+        transition: width 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .share-legend {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-top: 0.65rem;
+        font-size: 0.72rem;
+        color: var(--ink-faint);
+      }
+      .share-legend b { color: var(--ink); font-weight: 500; }
+      .share-legend .sw {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        margin-right: 0.45em;
+        vertical-align: middle;
+      }
+      .share-legend .sw.you { background: linear-gradient(90deg, #86D8DF, #9FB3ED); }
+      .share-legend .sw.rw { background: rgba(255, 255, 255, 0.16); }
+
+      .money .earn { text-align: right; padding-top: 1.3rem; }
+      .money .earn .label { display: block; margin-bottom: 0.5rem; }
+      .money .earn .big {
+        font-family: var(--serif);
+        font-size: clamp(2.4rem, 5vw, 3.4rem);
+        line-height: 1;
+        background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 45%, #9FB3ED 85%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .money .footnote { margin-top: 1.1rem; font-size: 0.7rem; line-height: 1.6; color: var(--ink-ghost); text-align: right; }
+
+      .payout-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.1rem;
+        margin-bottom: 1.4rem;
+      }
+      .payout-grid .p { padding: 1.1rem 1.25rem; border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 16px; background: rgba(0, 0, 0, 0.12); }
+      .payout-grid .p .label { display: block; margin-bottom: 0.5rem; }
+      .payout-grid .p .v { font-family: var(--serif); font-size: 1.5rem; color: var(--ink-bright); }
+      .payout-grid .p .v.accent { color: var(--accent); }
+
+      table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+      thead th {
+        text-align: left;
+        font-size: 0.62rem;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-ghost);
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      tbody td { padding: 0.8rem 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: var(--ink-muted); }
+      tbody tr:last-child td { border-bottom: 0; }
+      td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+      td .month { color: var(--ink); }
+
+      .pill {
+        display: inline-block;
+        padding: 0.28rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.66rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .pill.paid { color: rgba(134, 223, 177, 0.9); background: rgba(134, 223, 177, 0.08); border: 1px solid rgba(134, 223, 177, 0.22); }
+      .pill.due { color: rgba(240, 205, 140, 0.9); background: rgba(240, 205, 140, 0.07); border: 1px solid rgba(240, 205, 140, 0.22); }
+      .pill.accruing { color: rgba(159, 179, 237, 0.9); background: rgba(159, 179, 237, 0.08); border: 1px solid rgba(159, 179, 237, 0.22); }
+
+      .refer {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 2rem;
+        align-items: center;
+        border-color: rgba(134, 216, 223, 0.18);
+        background:
+          linear-gradient(120deg, rgba(134, 216, 223, 0.06), rgba(159, 179, 237, 0.05)),
+          var(--card-bg);
+      }
+      .refer > * { min-width: 0; }
+      .refer h2 {
+        margin-bottom: 0.55rem;
+        font-size: 1.6rem;
+      }
+      .refer h2 em {
+        font-style: italic;
+        background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 50%, #9FB3ED 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .refer p { font-size: 0.86rem; line-height: 1.65; color: var(--ink-muted); }
+      .refer .url-row { display: flex; gap: 0.6rem; }
+      .refer-note { display: block; margin-top: 0.6rem; font-size: 0.7rem; color: var(--ink-ghost); }
+      @media (max-width: 980px) { .refer { grid-template-columns: 1fr; gap: 1.2rem; } }
+
+      .foot {
+        margin-top: 2.6rem;
+        text-align: center;
+        font-size: 0.66rem;
+        letter-spacing: 0.05em;
+        color: var(--ink-ghost);
+      }
+      .foot a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(235, 235, 235, 0.15); }
+      .foot a:hover { color: var(--ink-muted); }
+
+      .gate {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: var(--bg);
+      }
+      .gate[hidden] { display: none; }
+      .gate-card {
+        width: 100%;
+        max-width: 24rem;
+        text-align: center;
+        border: 1px solid var(--card-line);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 3rem 2.4rem 2.6rem;
+      }
+      .gate-card .tag {
+        font-size: 0.62rem;
+        font-weight: 500;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: rgba(134, 216, 223, 0.75);
+        display: block;
+        margin-bottom: 1.4rem;
+      }
+      .gate-card h1 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 2.1rem;
+        color: var(--ink-bright);
+        margin-bottom: 0.6rem;
+      }
+      .gate-card p { font-size: 0.86rem; color: var(--ink-faint); margin-bottom: 1.8rem; }
+      .gate-card input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--ink-bright);
+        font-family: var(--sans);
+        font-size: 1rem;
+        letter-spacing: 0.24em;
+        text-align: center;
+        text-transform: uppercase;
+        padding: 0.95rem 1rem;
+        margin-bottom: 0.9rem;
+        transition: border-color 0.3s ease;
+      }
+      .gate-card input::placeholder { letter-spacing: 0.08em; text-transform: none; color: var(--ink-ghost); }
+      .gate-card input:focus { outline: none; border-color: rgba(134, 216, 223, 0.5); }
+      .gate-card button {
+        width: 100%;
+        border: 0;
+        border-radius: 999px;
+        background: #ECEBE9;
+        color: #0D0D0D;
+        font-family: var(--sans);
+        font-size: 0.95rem;
+        font-weight: 500;
+        padding: 0.95rem;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .gate-card button:hover { background: #fff; transform: translateY(-1px); }
+      .gate-card .err { min-height: 1.2rem; margin: 0.8rem 0 0; font-size: 0.76rem; color: rgba(240, 160, 160, 0.9); }
+      .gate-card .hint { margin-top: 1.3rem; font-size: 0.7rem; color: var(--ink-ghost); }
+      .gate-card .hint b { font-weight: 500; color: var(--ink-faint); letter-spacing: 0.1em; }
+      .gate-card.shake { animation: shake 0.4s ease; }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-7px); }
+        75% { transform: translateX(7px); }
+      }
+
+      .rise { opacity: 0; transform: translateY(16px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+      body.in .rise { opacity: 1; transform: none; }
+      .rise.d1 { transition-delay: 0.08s; }
+      .rise.d2 { transition-delay: 0.16s; }
+      .rise.d3 { transition-delay: 0.24s; }
+      .rise.d4 { transition-delay: 0.32s; }
+
+      @media (max-width: 980px) {
+        .tiles { grid-template-columns: repeat(2, 1fr); }
+        .grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 640px) {
+        .payout-grid { grid-template-columns: 1fr; }
+        .who .meta { display: none; }
+        .greet-row { align-items: flex-start; flex-direction: column; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .drift i { animation: none; }
+        .rise { opacity: 1; transform: none; transition: none; }
+      }
+    </style>
+
+    <script>
+      import { RW } from '../../scripts/affiliates.js';
+
+      const LS_KEY = 'rw_aff_code';
+      const state = { aff: null, days: 30, metric: 'views' };
+      const $ = (id) => document.getElementById(id);
+
+      /* ---------- gate ---------- */
+      function showGate() {
+        $('main').hidden = true;
+        $('who').innerHTML = '';
+        $('gate').hidden = false;
+        document.body.classList.remove('in');
+        setTimeout(() => $('gate-code').focus(), 50);
+      }
+      $('gate-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const a = RW.byCode($('gate-code').value);
+        if (!a) {
+          $('gate-err').textContent = 'Hmm, that code is not on the list. Try NEURO7.';
+          const card = e.target;
+          card.classList.remove('shake');
+          void card.offsetWidth;
+          card.classList.add('shake');
+          return;
+        }
+        localStorage.setItem(LS_KEY, a.code);
+        $('gate-err').textContent = '';
+        enter(a);
+      });
+
+      function enter(a) {
+        state.aff = a;
+        $('gate').hidden = true;
+        $('main').hidden = false;
+        renderWho();
+        renderTabs();
+        renderAll();
+        requestAnimationFrame(() => document.body.classList.add('in'));
+      }
+
+      /* ---------- topbar ---------- */
+      function renderWho() {
+        const a = state.aff;
+        const person = a.person || a.name;
+        const av = a.avatar || a.avatarUrl;
+        $('who').innerHTML =
+          '<div class="meta"><div class="name">' + person + '</div><div class="code">@' + a.handle + '</div></div>' +
+          '<div class="avatar">' + (av ? '<img src="' + av + '" alt="" />' : person.charAt(0)) + '</div>' +
+          '<button type="button" id="signout">Sign out</button>';
+        $('signout').addEventListener('click', () => {
+          localStorage.removeItem(LS_KEY);
+          showGate();
+        });
+      }
+
+      /* ---------- range ---------- */
+      $('range').addEventListener('click', function (e) {
+        const b = e.target.closest('button');
+        if (!b) return;
+        state.days = +b.dataset.days;
+        this.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+        b.classList.add('on');
+        renderAll();
+      });
+
+      function rangeLabel() {
+        return state.days === 0 ? 'Since you joined' : 'Last ' + state.days + ' days';
+      }
+
+      /* ---------- render ---------- */
+      function renderAll() {
+        const a = state.aff;
+        const t = RW.totals(a.code, state.days);
+
+        const h = new Date().getHours();
+        const slot = h < 5 ? 'Up late' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+        const first = a.person || a.name.split(' ')[0];
+        $('greet-h').innerHTML = slot + ', <em>' + first + '.</em>';
+        $('greet-p').textContent = 'Performance overview · ' + rangeLabel();
+
+        renderTiles(a, t);
+        renderChart(a);
+        renderPage(a);
+        renderFunnel(a, t);
+        renderMoney(a, t);
+        renderPayouts(a);
+        renderRefer(a);
+      }
+
+      /* ---------- refer a creator ---------- */
+      function renderRefer(a) {
+        const display = 'rewiremission.com/affiliates?ref=' + a.handle;
+        $('refer-url').textContent = display;
+        $('refer-copy-btn').onclick = function () {
+          const btn = this;
+          navigator.clipboard.writeText('https://' + display).then(() => {
+            btn.classList.add('copied');
+            btn.lastChild.textContent = ' Copied';
+            setTimeout(() => { btn.classList.remove('copied'); btn.lastChild.textContent = ' Copy'; }, 1600);
+          });
+        };
+      }
+
+      function renderTiles(a, t) {
+        const prev = state.days ? RW.totals(a.code, state.days, state.days) : null;
+        const defs = [
+          ['Page views', t.views, prev && prev.views, false, 'views'],
+          ['Link clicks', t.clicks, prev && prev.clicks, false, 'clicks'],
+          ['Trial starts', t.trials, prev && prev.trials, false, 'trials'],
+          ['Revenue', t.verifiedRevenue, prev && prev.verifiedRevenue, true, 'revenue'],
+          ['Earnings', t.earnings, prev && prev.earnings, true, 'earnings']
+        ];
+        $('tiles').innerHTML = defs.map((d, i) => {
+          const [label, val, prevVal, money, metric] = d;
+          let deltaHtml;
+          if (prevVal > 0) {
+            const ch = (val - prevVal) / prevVal * 100;
+            const cls = ch >= 0 ? 'up' : 'down';
+            deltaHtml = '<span class="delta ' + cls + '">' + (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(0) + '% vs previous</span>';
+          } else {
+            deltaHtml = '<span class="delta">' + rangeLabel() + '</span>';
+          }
+          return '<div class="card tile rise d' + Math.min(i, 4) + '" role="button" tabindex="0" data-metric="' + metric + '" title="Show ' + label.toLowerCase() + ' in Trends">' +
+            '<span class="label">' + label + '</span><span class="value">' + (money ? RW.money(val) : RW.num(val)) + '</span>' + deltaHtml + '</div>';
+        }).join('');
+      }
+
+      // tiles jump to their metric in the Trends chart
+      $('tiles').addEventListener('click', (e) => {
+        const tile = e.target.closest('[data-metric]');
+        if (!tile) return;
+        state.metric = tile.dataset.metric;
+        renderChart(state.aff);
+        document.querySelector('.chart-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      $('tiles').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const tile = e.target.closest('[data-metric]');
+          if (!tile) return;
+          e.preventDefault();
+          tile.click();
+        }
+      });
+
+      /* ---------- chart ---------- */
+      const METRICS = [
+        { key: 'views',    label: 'Views',    color: '#86D8DF', money: false, get: (r) => r.views },
+        { key: 'clicks',   label: 'Clicks',   color: '#9FB3ED', money: false, get: (r) => r.clicks },
+        { key: 'installs', label: 'Installs', color: '#B9A9F2', money: false, get: (r) => r.installs },
+        { key: 'trials',   label: 'Trials',   color: '#EFB8C8', money: false, get: (r) => r.trials },
+        { key: 'revenue',  label: 'Revenue',  color: '#F0CD8C', money: true,  get: (r) => r.revenue },
+        { key: 'earnings', label: 'Earnings', color: '#8CE0B7', money: true,  get: (r) => r.revenue * state.aff.share }
+      ];
+
+      function currentMetric() { return METRICS.find((m) => m.key === state.metric); }
+      function alphaColor(hex, a) {
+        const v = parseInt(hex.slice(1), 16);
+        return 'rgba(' + ((v >> 16) & 255) + ',' + ((v >> 8) & 255) + ',' + (v & 255) + ',' + a + ')';
+      }
+      function fmtVal(v, money) { return money ? RW.money(v) : RW.num(v); }
+      function fmtTick(v, money) {
+        const short = v >= 1000 ? (v / 1000).toFixed(v >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(Math.round(v));
+        return money ? '$' + short : short;
+      }
+      function niceCeil(v) {
+        const p = Math.pow(10, Math.floor(Math.log10(v || 1)));
+        for (const mult of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (mult * p >= v) return mult * p;
+        return 10 * p;
+      }
+
+      function renderTabs() {
+        const wrap = $('metric-tabs');
+        wrap.innerHTML = METRICS.map((m) =>
+          '<button class="mtab" type="button" role="tab" data-key="' + m.key + '">' + m.label + '</button>'
+        ).join('');
+        wrap.onclick = (e) => {
+          const b = e.target.closest('.mtab');
+          if (!b) return;
+          state.metric = b.dataset.key;
+          renderChart(state.aff);
+        };
+        styleTabs();
+      }
+      function styleTabs() {
+        document.querySelectorAll('.mtab').forEach((b) => {
+          const m = METRICS.find((x) => x.key === b.dataset.key);
+          const on = m.key === state.metric;
+          b.style.background = on ? alphaColor(m.color, 0.14) : '';
+          b.style.borderColor = on ? alphaColor(m.color, 0.55) : '';
+          b.style.color = on ? m.color : '';
+          b.setAttribute('aria-selected', String(on));
+        });
+      }
+
+      // Catmull-Rom smoothing, control points clamped to the plot area
+      function smoothPath(pts, clampY) {
+        if (pts.length < 3) return pts.map((p, i) => (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' ');
+        let d = 'M' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(1);
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+          const c1y = clampY(p1.y + (p2.y - p0.y) / 6), c2y = clampY(p2.y - (p3.y - p1.y) / 6);
+          d += ' C' + (p1.x + (p2.x - p0.x) / 6).toFixed(1) + ' ' + c1y.toFixed(1) + ' ' +
+            (p2.x - (p3.x - p1.x) / 6).toFixed(1) + ' ' + c2y.toFixed(1) + ' ' +
+            p2.x.toFixed(1) + ' ' + p2.y.toFixed(1);
+        }
+        return d;
+      }
+
+      let chartData = [];
+      let chartGeo = null;
+
+      function renderChart(a) {
+        const m = currentMetric();
+        styleTabs();
+
+        const s = RW.series(a.code);
+        let joinedIdx = 0;
+        for (let i = 0; i < s.length; i++) { if (s[i].views > 0) { joinedIdx = i; break; } }
+        const n = state.days === 0 ? s.length - joinedIdx : Math.min(state.days, s.length);
+        chartData = s.slice(s.length - n);
+        const vals = chartData.map((r) => m.get(r));
+
+        const wrap = $('chart-wrap'), svg = $('chart');
+        const W = Math.max(320, wrap.clientWidth), H = Math.max(230, wrap.clientHeight);
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+        const padL = 52, padR = 14, padT = 16, padB = 30;
+        const iw = W - padL - padR, ih = H - padT - padB;
+        const max = niceCeil(Math.max.apply(null, vals.concat([1])) * 1.08);
+        const x = (i) => padL + (chartData.length === 1 ? iw / 2 : (i / (chartData.length - 1)) * iw);
+        const y = (v) => padT + ih - (v / max) * ih;
+        const clampY = (v) => Math.max(padT, Math.min(padT + ih, v));
+        chartGeo = { x, y, W, H };
+
+        const pts = vals.map((v, i) => ({ x: x(i), y: y(v) }));
+        const line = smoothPath(pts, clampY);
+        const area = line + ' L' + x(chartData.length - 1).toFixed(1) + ' ' + (padT + ih) + ' L' + x(0).toFixed(1) + ' ' + (padT + ih) + ' Z';
+
+        let grid = '';
+        for (let g = 1; g <= 4; g++) {
+          const gv = max * g / 4;
+          const gy = y(gv).toFixed(1);
+          grid += '<line x1="' + padL + '" y1="' + gy + '" x2="' + (W - padR) + '" y2="' + gy + '" stroke="rgba(255,255,255,0.05)"/>' +
+            '<text x="' + (padL - 10) + '" y="' + (+gy + 3) + '" text-anchor="end" font-size="10" fill="rgba(235,235,235,0.32)" font-family="Hanken Grotesk,sans-serif">' + fmtTick(gv, m.money) + '</text>';
+        }
+        grid += '<line x1="' + padL + '" y1="' + (padT + ih) + '" x2="' + (W - padR) + '" y2="' + (padT + ih) + '" stroke="rgba(255,255,255,0.09)"/>';
+
+        let ticks = '';
+        const tickCount = Math.min(6, chartData.length);
+        for (let k = 0; k < tickCount; k++) {
+          const idx = Math.round(k * (chartData.length - 1) / Math.max(1, tickCount - 1));
+          const lbl = chartData[idx].date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          const anchor = k === 0 ? 'start' : k === tickCount - 1 ? 'end' : 'middle';
+          ticks += '<text x="' + x(idx).toFixed(1) + '" y="' + (H - 9) + '" text-anchor="' + anchor + '" font-size="10" fill="rgba(235,235,235,0.32)" font-family="Hanken Grotesk,sans-serif">' + lbl + '</text>';
+        }
+
+        const total = vals.reduce((sum, v) => sum + v, 0);
+        const avg = total / Math.max(1, vals.length);
+        const avgY = y(avg).toFixed(1);
+        const avgLine =
+          '<line x1="' + padL + '" y1="' + avgY + '" x2="' + (W - padR) + '" y2="' + avgY + '" stroke="' + alphaColor(m.color, 0.35) + '" stroke-dasharray="2 5" stroke-width="1"/>' +
+          '<text x="' + (W - padR) + '" y="' + (+avgY - 5) + '" text-anchor="end" font-size="9" letter-spacing="1" fill="' + alphaColor(m.color, 0.55) + '" font-family="Hanken Grotesk,sans-serif">AVG ' + fmtTick(avg, m.money) + '</text>';
+
+        $('chart').innerHTML =
+          '<defs><linearGradient id="fillg" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0%" stop-color="' + alphaColor(m.color, 0.30) + '"/>' +
+          '<stop offset="72%" stop-color="' + alphaColor(m.color, 0.04) + '"/>' +
+          '<stop offset="100%" stop-color="' + alphaColor(m.color, 0) + '"/></linearGradient></defs>' +
+          grid + ticks +
+          '<path d="' + area + '" fill="url(#fillg)"/>' +
+          '<path d="' + line + '" fill="none" stroke="' + alphaColor(m.color, 0.16) + '" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>' +
+          '<path d="' + line + '" fill="none" stroke="' + m.color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+          avgLine +
+          '<line id="guide" y1="' + padT + '" y2="' + (padT + ih) + '" stroke="' + alphaColor(m.color, 0.35) + '" stroke-dasharray="3 3" visibility="hidden"/>' +
+          '<circle id="dot-halo" r="8" fill="' + alphaColor(m.color, 0.18) + '" visibility="hidden"/>' +
+          '<circle id="dot" r="3.6" fill="' + m.color + '" stroke="#13223F" stroke-width="1.5" visibility="hidden"/>';
+
+        $('chart-range-label').textContent = rangeLabel();
+
+        const best = chartData.reduce((b, r) => (m.get(r) > m.get(b) ? r : b), chartData[0]);
+        let deltaHtml = '<span class="v">-</span>';
+        if (state.days) {
+          const prevSlice = s.slice(Math.max(0, s.length - 2 * n), s.length - n);
+          const prevTotal = prevSlice.reduce((sum, r) => sum + m.get(r), 0);
+          if (prevTotal > 0) {
+            const ch = (total - prevTotal) / prevTotal * 100;
+            deltaHtml = '<span class="v ' + (ch >= 0 ? 'up' : 'down') + '">' + (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(0) + '%</span>';
+          }
+        }
+        $('chart-meta').innerHTML =
+          '<div class="m"><span class="label">Total · ' + m.label + '</span><span class="v">' + fmtVal(total, m.money) + '</span></div>' +
+          '<div class="m"><span class="label">Vs previous</span>' + deltaHtml + '</div>' +
+          '<div class="m"><span class="label">Best day</span><span class="v">' + fmtVal(m.get(best), m.money) + '<small>' + best.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</small></span></div>' +
+          '<div class="m"><span class="label">Daily average</span><span class="v">' + fmtVal(avg, m.money) + '</span></div>';
+
+        bindChartHover();
+      }
+
+      function bindChartHover() {
+        const wrap = $('chart-wrap'), svg = $('chart'), tip = $('chart-tip');
+        wrap.onmousemove = (e) => {
+          if (!chartData.length || !chartGeo) return;
+          const m = currentMetric();
+          const rect = svg.getBoundingClientRect();
+          const relX = e.clientX - rect.left;
+          const first = chartGeo.x(0), last = chartGeo.x(chartData.length - 1);
+          let i = Math.round((relX - first) / Math.max(1, last - first) * (chartData.length - 1));
+          i = Math.max(0, Math.min(chartData.length - 1, i));
+          const r = chartData[i];
+          const cx = chartGeo.x(i), cy = chartGeo.y(m.get(r));
+          svg.querySelector('#guide').setAttribute('x1', cx);
+          svg.querySelector('#guide').setAttribute('x2', cx);
+          svg.querySelector('#guide').setAttribute('visibility', 'visible');
+          ['dot', 'dot-halo'].forEach((id) => {
+            const el = svg.querySelector('#' + id);
+            el.setAttribute('cx', cx); el.setAttribute('cy', cy); el.setAttribute('visibility', 'visible');
+          });
+          tip.style.opacity = '1';
+          tip.style.left = cx + 'px';
+          tip.style.top = cy + 'px';
+          tip.innerHTML = r.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) +
+            ' · <span style="color:' + m.color + ';font-weight:500">' + fmtVal(m.get(r), m.money) + ' ' + m.label.toLowerCase() + '</span>';
+        };
+        wrap.onmouseleave = () => {
+          tip.style.opacity = '0';
+          ['guide', 'dot', 'dot-halo'].forEach((id) => {
+            const el = svg.querySelector('#' + id);
+            if (el) el.setAttribute('visibility', 'hidden');
+          });
+        };
+      }
+
+      // redraw on card resize (chart fills the row height)
+      let roTick = 0;
+      new ResizeObserver(() => {
+        cancelAnimationFrame(roTick);
+        roTick = requestAnimationFrame(() => {
+          if (state.aff && !$('main').hidden) renderChart(state.aff);
+        });
+      }).observe($('chart-wrap'));
+
+      /* ---------- your page ---------- */
+      function renderPage(a) {
+        const display = 'rewiremission.com/affiliate?a=' + a.handle;
+        const url = RW.localPageUrlFor(a);
+        $('page-handle').textContent = '@' + a.handle;
+        $('page-url-text').textContent = display;
+        $('preview-addr').textContent = display;
+        $('open-btn').href = url;
+        const iframe = $('preview-iframe');
+        if (iframe.dataset.src !== url) { iframe.src = url; iframe.dataset.src = url; }
+        $('copy-btn').onclick = function () {
+          const btn = this;
+          navigator.clipboard.writeText('https://' + display).then(() => {
+            btn.classList.add('copied');
+            btn.lastChild.textContent = ' Copied';
+            setTimeout(() => { btn.classList.remove('copied'); btn.lastChild.textContent = ' Copy'; }, 1600);
+          });
+        };
+      }
+
+      /* ---------- funnel + money ---------- */
+      function renderFunnel(a, t) {
+        const steps = [
+          ['Link clicks', t.clicks, t.clicks, null],
+          ['Installs', t.installs, t.clicks, 'of clicks'],
+          ['Trial starts', t.trials, t.installs, 'of installs'],
+          ['Paid members', t.paid, t.trials, 'of trials']
+        ];
+        $('funnel').innerHTML = steps.map((s) => {
+          const w = t.clicks > 0 ? Math.max(2, s[1] / t.clicks * 100) : 0;
+          const conv = s[3] ? RW.pct(s[1], s[2]) + ' ' + s[3] : rangeLabel();
+          return '<div class="step"><div class="row1"><span class="n">' + s[0] + '</span><span class="v">' + RW.num(s[1]) + '</span></div>' +
+            '<div class="bar"><i style="width:' + w + '%"></i></div>' +
+            '<div class="conv">' + conv + '</div></div>';
+        }).join('');
+      }
+
+      function renderMoney(a, t) {
+        const youPct = Math.round(a.share * 100);
+        const rwPct = 100 - youPct;
+        const you = t.verifiedRevenue * a.share;
+        const rewire = t.verifiedRevenue - you;
+        $('money').innerHTML =
+          '<div class="m-row"><span class="k">Est. revenue (incl. open trials)</span><span class="v">' + RW.money(t.estRevenue) + '</span></div>' +
+          '<div class="m-row"><span class="k">Verified revenue</span><span class="v">' + RW.money(t.verifiedRevenue) + '</span></div>' +
+          '<div class="share-block">' +
+            '<div class="row1"><span class="label">Your assigned revenue share</span><span class="pct">' + youPct + '%</span></div>' +
+            '<div class="share-bar"><i style="width:' + youPct + '%"></i></div>' +
+            '<div class="share-legend">' +
+              '<span><i class="sw you"></i>You · ' + youPct + '% · <b>' + RW.money(you) + '</b></span>' +
+              '<span><i class="sw rw"></i>Rewire · ' + rwPct + '% · <b>' + RW.money(rewire) + '</b></span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="earn"><span class="label">Your earnings · ' + rangeLabel() + '</span><span class="big">' + RW.money(t.earnings) + '</span></div>' +
+          '<p class="footnote">Estimated revenue projects trials still in progress. Verified revenue is confirmed after the refund window and is what your share is paid on.</p>';
+      }
+
+      /* ---------- payouts ---------- */
+      function renderPayouts(a) {
+        const p = RW.payoutSummary(a.code);
+        const next = p.nextPayout.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+        $('payout-tiles').innerHTML =
+          '<div class="p"><span class="label">Pending balance</span><span class="v accent">' + RW.money(p.pending) + '</span></div>' +
+          '<div class="p"><span class="label">Paid to date</span><span class="v">' + RW.money(p.paidToDate) + '</span></div>' +
+          '<div class="p"><span class="label">Next payout</span><span class="v">' + next + '</span></div>';
+
+        const labels = { paid: 'Paid', due: 'Processing', accruing: 'Accruing' };
+        $('payout-rows').innerHTML = p.months.slice().reverse().map((m) =>
+          '<tr><td><span class="month">' + m.label + '</span></td>' +
+          '<td class="num">' + RW.money(m.verifiedRevenue) + '</td>' +
+          '<td class="num">' + Math.round(a.share * 100) + '%</td>' +
+          '<td class="num">' + RW.money(m.earnings) + '</td>' +
+          '<td style="text-align:right"><span class="pill ' + m.status + '">' + labels[m.status] + '</span></td></tr>'
+        ).join('');
+      }
+
+      /* ---------- boot ---------- */
+      const saved = RW.byCode(localStorage.getItem(LS_KEY));
+      if (saved) enter(saved); else showGate();
+    </script>
+  </body>
+</html>

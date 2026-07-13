@@ -1,0 +1,1001 @@
+---
+// Affiliate admin - manage all affiliates and payouts. Same sample data
+// engine as /dash so both views always agree.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Rewire Affiliates - Admin</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#13223F" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2313223F'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%232A1E5C'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='%2386D8DF' stroke-opacity='0.6' stroke-width='1.5'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="drift" aria-hidden="true"><i class="a"></i><i class="b"></i></div>
+
+    <!-- admin gate -->
+    <div class="gate" id="gate" hidden>
+      <form class="gate-card" id="gate-form">
+        <span class="tag">Rewire · Admin</span>
+        <h1>Team only.</h1>
+        <p>Enter the team passcode to manage affiliates.</p>
+        <input id="gate-pass" type="password" placeholder="Passcode" autocomplete="off" />
+        <button type="submit">Enter</button>
+        <p class="hint">Preview build - any passcode works.</p>
+      </form>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="/dash">
+        <span class="word">Rewire</span>
+        <span class="tag">Admin</span>
+      </a>
+      <div class="top-actions">
+        <button class="ghost-btn" id="export-btn" type="button">Export CSV</button>
+        <button class="ghost-btn" id="reset-btn" type="button" title="Reset demo payout state">Reset demo</button>
+        <button class="ghost-btn" id="lock-btn" type="button">Lock</button>
+      </div>
+    </header>
+
+    <main id="main" hidden>
+      <div class="greet-row">
+        <div class="greet rise">
+          <h1>Your <em>affiliates.</em></h1>
+          <p id="greet-p"></p>
+        </div>
+        <a class="verified rise d1" href="https://appstack.tech" target="_blank" rel="noopener" title="Attribution and revenue data confirmed by AppStack">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          Verified by AppStack
+        </a>
+      </div>
+
+      <div class="tiles" id="tiles"></div>
+
+      <div class="card integration rise d1">
+        <div class="int-left">
+          <h2>AppStack sync</h2>
+          <p>Attribution and revenue reporting. Once connected, sample data is replaced with live numbers for every partner - clicks, installs, trials, and revenue, per day.</p>
+        </div>
+        <div class="int-right">
+          <span class="pill" id="int-status"></span>
+          <div class="int-row">
+            <input id="int-key" type="password" placeholder="AppStack API key" autocomplete="off" spellcheck="false" />
+            <button class="ghost-btn" id="int-save" type="button">Save</button>
+            <button class="ghost-btn" id="int-test" type="button">Test</button>
+          </div>
+          <small id="int-note"></small>
+        </div>
+      </div>
+
+      <div class="card table-card rise d2">
+        <div class="card-head">
+          <h2>All affiliates</h2>
+          <div class="head-tools">
+            <input class="search" id="search" type="search" placeholder="Search name, handle, code…" />
+            <button class="add-btn" id="add-btn" type="button">+ Add affiliate</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead id="thead"></thead>
+            <tbody id="tbody"></tbody>
+            <tfoot id="tfoot"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <p class="foot rise d3">All-time figures per affiliate. Preview build with sample data.<br /><a href="/dash">← Affiliate view</a></p>
+    </main>
+
+    <!-- add / edit affiliate -->
+    <div class="modal" id="modal" hidden>
+      <div class="modal-card">
+        <div class="modal-head">
+          <h2 id="modal-title">Add affiliate</h2>
+          <button class="ghost-btn" id="modal-close" type="button">Close</button>
+        </div>
+        <form id="aff-form" novalidate>
+          <div class="avatar-row">
+            <div class="avatar-preview" id="avatar-preview"><span>?</span></div>
+            <div class="avatar-meta">
+              <label class="file-btn">Upload icon<input type="file" id="f-avatar" accept="image/*" hidden /></label>
+              <small>Shown on their landing page, their dashboard, and this list.</small>
+            </div>
+          </div>
+          <div class="grid2">
+            <label>Name<input id="f-name" placeholder="Calm Collective" autocomplete="off" /></label>
+            <label>First name<input id="f-person" placeholder="Sofia" autocomplete="off" /></label>
+            <label>Handle<input id="f-handle" placeholder="calmcollective" autocomplete="off" spellcheck="false" /></label>
+            <label>Login code<input id="f-code" placeholder="CALM" autocomplete="off" spellcheck="false" /></label>
+            <label>Platform
+              <select id="f-platform">
+                <option>Instagram</option>
+                <option>TikTok</option>
+                <option>YouTube</option>
+                <option>X</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label>Revenue share %<input id="f-share" type="number" min="1" max="95" step="1" value="30" /></label>
+            <label>Joined<input id="f-joined" type="date" /><small>Backdate to preview sample stats.</small></label>
+          </div>
+          <div class="page-line" id="page-line" hidden>
+            <span class="label">Their page</span>
+            <code id="page-url"></code>
+            <a id="page-open" class="ghost-btn" target="_blank" rel="noopener">Open</a>
+          </div>
+          <p class="form-err" id="form-err"></p>
+          <div class="modal-actions">
+            <button type="button" class="ghost-btn" id="copy-config" title="Copies a snippet for src/scripts/affiliates.js so this partner ships for everyone">Copy config</button>
+            <button type="button" class="ghost-btn danger" id="delete-aff" hidden>Delete</button>
+            <button type="submit" class="save-btn" id="save-aff">Save affiliate</button>
+          </div>
+          <p class="hint-line">Preview build: partners save to this browser. Copy config to make one permanent in code.</p>
+        </form>
+      </div>
+    </div>
+
+    <style is:global>
+      :root {
+        --bg: #13223F;
+        --ink-bright: #F2F1EF;
+        --ink: rgba(235, 235, 235, 0.86);
+        --ink-muted: rgba(235, 235, 235, 0.60);
+        --ink-faint: rgba(235, 235, 235, 0.42);
+        --ink-ghost: rgba(235, 235, 235, 0.25);
+        --serif: 'Instrument Serif', Georgia, serif;
+        --sans: 'Hanken Grotesk', -apple-system, sans-serif;
+        --accent: #86D8DF;
+        --card-bg: rgba(255, 255, 255, 0.035);
+        --card-line: rgba(255, 255, 255, 0.09);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: var(--bg);
+        color: var(--ink-muted);
+        font-family: var(--sans);
+        font-weight: 300;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      ::selection { background: rgba(134, 216, 223, 0.20); color: #fff; }
+
+      .drift { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+      .drift i { position: absolute; display: block; border-radius: 50%; filter: blur(52px); }
+      .drift .a {
+        width: 70vmax; height: 54vmax; left: -22%; top: -26%;
+        background: radial-gradient(50% 50% at 50% 50%, rgba(70, 90, 135, 0.38), transparent 70%);
+        animation: driftA 60s ease-in-out infinite alternate;
+      }
+      .drift .b {
+        width: 60vmax; height: 48vmax; right: -22%; bottom: -24%;
+        background: radial-gradient(50% 50% at 50% 50%, rgba(90, 84, 175, 0.20), transparent 70%);
+        animation: driftB 75s ease-in-out infinite alternate;
+      }
+      @keyframes driftA { to { transform: translate(8%, 10%) scale(1.15); } }
+      @keyframes driftB { to { transform: translate(-9%, -9%) scale(1.1); } }
+
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      a { color: inherit; }
+      a:focus-visible, button:focus-visible, input:focus-visible { outline: 1px solid var(--ink-faint); outline-offset: 4px; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.1rem clamp(1.2rem, 4vw, 2.6rem);
+        background: rgba(19, 34, 63, 0.72);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .brand { display: flex; align-items: baseline; gap: 0.7rem; text-decoration: none; }
+      .brand .word { font-family: var(--serif); font-size: 1.25rem; color: var(--ink-bright); }
+      .brand .tag {
+        font-size: 0.6rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase;
+        color: rgba(240, 205, 140, 0.8);
+      }
+      .top-actions { display: flex; gap: 0.6rem; }
+      .ghost-btn {
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        color: var(--ink-faint);
+        font-family: var(--sans);
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.45rem 0.95rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .ghost-btn:hover { color: var(--ink-bright); border-color: rgba(255, 255, 255, 0.32); }
+
+      main { max-width: 80rem; margin: 0 auto; padding: 2.8rem clamp(1.2rem, 4vw, 2.6rem) 4rem; }
+
+      .greet-row {
+        display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+        gap: 1.2rem; margin-bottom: 2rem;
+      }
+      .greet h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.9rem, 4.5vw, 2.9rem); line-height: 1.12; color: var(--ink-bright); }
+      .greet h1 em {
+        font-style: italic;
+        background: linear-gradient(105deg, #EDEBF7 10%, #C7D0F4 50%, #9FB3ED 90%);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      .greet p { margin-top: 0.5rem; font-size: 0.92rem; color: var(--ink-faint); }
+
+      .verified {
+        display: inline-flex; align-items: center; gap: 0.45rem;
+        padding: 0.38rem 0.85rem;
+        border: 1px solid rgba(134, 216, 223, 0.22);
+        border-radius: 999px;
+        background: rgba(134, 216, 223, 0.06);
+        font-size: 0.64rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+        color: rgba(134, 216, 223, 0.85);
+        white-space: nowrap;
+      }
+      .verified svg { width: 1em; height: 1em; flex: none; }
+      a.verified { text-decoration: none; transition: border-color 0.3s ease, background 0.3s ease; }
+      a.verified:hover { border-color: rgba(134, 216, 223, 0.5); background: rgba(134, 216, 223, 0.12); }
+
+      .card {
+        border: 1px solid var(--card-line);
+        border-radius: 22px;
+        background: var(--card-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 1.6rem 1.7rem;
+      }
+
+      .label { font-size: 0.64rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); }
+
+      .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; margin-bottom: 1.1rem; }
+      .tiles > * { min-width: 0; }
+      .tile { padding: 1.35rem 1.5rem 1.3rem; }
+      .tile .label { display: block; margin-bottom: 0.65rem; }
+      .tile .value { font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1; color: var(--ink-bright); }
+      .tile .value.owed { color: rgba(240, 205, 140, 0.95); }
+      .tile .note { display: block; margin-top: 0.6rem; font-size: 0.72rem; color: var(--ink-faint); }
+
+      .table-card .card-head {
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+        gap: 0.9rem; margin-bottom: 1.2rem;
+      }
+      .table-card h2 { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; color: var(--ink-bright); }
+      .head-tools { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+      .search {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.18);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 0.8rem;
+        padding: 0.55rem 1.1rem;
+        width: 15rem;
+        max-width: 100%;
+      }
+      .search::placeholder { color: var(--ink-ghost); }
+      .search:focus { outline: none; border-color: rgba(134, 216, 223, 0.4); }
+
+      .table-scroll { overflow-x: auto; margin: 0 -0.4rem; }
+      table { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 60rem; }
+      thead th {
+        text-align: left;
+        font-size: 0.6rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--ink-ghost);
+        padding: 0.55rem 0.7rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+      }
+      thead th:hover { color: var(--ink-muted); }
+      thead th .arrow { font-size: 0.55rem; margin-left: 0.25em; }
+      tbody td { padding: 0.85rem 0.7rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: var(--ink-muted); white-space: nowrap; }
+      tbody tr:last-child td { border-bottom: 0; }
+      tbody tr:hover td { background: rgba(255, 255, 255, 0.015); }
+      td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+      .aff-cell { display: flex; align-items: center; gap: 0.7rem; }
+      .aff-cell .avatar {
+        width: 30px; height: 30px; border-radius: 50%;
+        display: grid; place-items: center;
+        font-family: var(--serif); font-size: 0.9rem; color: #0f1c35;
+        background: linear-gradient(135deg, #C7D0F4, #86D8DF);
+        flex: none;
+      }
+      .aff-cell .n { line-height: 1.25; }
+      .aff-cell .name { font-size: 0.86rem; font-weight: 500; color: var(--ink); }
+      .aff-cell .handle { font-size: 0.7rem; color: var(--ink-faint); }
+
+      .money-strong { color: var(--ink-bright); font-weight: 400; }
+      .owed-cell { color: rgba(240, 205, 140, 0.95); }
+
+      .pill {
+        display: inline-block;
+        padding: 0.28rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .pill.paid { color: rgba(134, 223, 177, 0.9); background: rgba(134, 223, 177, 0.08); border: 1px solid rgba(134, 223, 177, 0.22); }
+      .pill.due { color: rgba(240, 205, 140, 0.9); background: rgba(240, 205, 140, 0.07); border: 1px solid rgba(240, 205, 140, 0.22); }
+
+      .pay-btn {
+        border: 1px solid rgba(134, 216, 223, 0.35);
+        background: rgba(134, 216, 223, 0.08);
+        color: var(--accent);
+        font-family: var(--sans);
+        font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em;
+        padding: 0.42rem 0.9rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background 0.25s ease;
+        white-space: nowrap;
+      }
+      .pay-btn:hover { background: rgba(134, 216, 223, 0.16); }
+      .pay-btn[disabled] { opacity: 0.35; cursor: default; border-color: rgba(255, 255, 255, 0.12); color: var(--ink-faint); background: none; }
+
+      tfoot td {
+        padding: 0.95rem 0.7rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 500;
+        color: var(--ink);
+        white-space: nowrap;
+      }
+
+      .foot { margin-top: 2.6rem; text-align: center; font-size: 0.66rem; letter-spacing: 0.05em; color: var(--ink-ghost); }
+      .foot a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(235, 235, 235, 0.15); }
+
+      .gate { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: var(--bg); }
+      .gate[hidden] { display: none; }
+      .gate-card {
+        width: 100%; max-width: 24rem; text-align: center;
+        border: 1px solid var(--card-line); border-radius: 26px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        padding: 3rem 2.4rem 2.6rem;
+      }
+      .gate-card .tag { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.34em; text-transform: uppercase; color: rgba(240, 205, 140, 0.8); display: block; margin-bottom: 1.4rem; }
+      .gate-card h1 { font-family: var(--serif); font-weight: 400; font-size: 2.1rem; color: var(--ink-bright); margin-bottom: 0.6rem; }
+      .gate-card p { font-size: 0.86rem; color: var(--ink-faint); margin-bottom: 1.8rem; }
+      .gate-card input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--ink-bright);
+        font-family: var(--sans);
+        font-size: 1rem;
+        letter-spacing: 0.2em;
+        text-align: center;
+        padding: 0.95rem 1rem;
+        margin-bottom: 0.9rem;
+      }
+      .gate-card input:focus { outline: none; border-color: rgba(240, 205, 140, 0.5); }
+      .gate-card input::placeholder { letter-spacing: 0.08em; color: var(--ink-ghost); }
+      .gate-card button {
+        width: 100%; border: 0; border-radius: 999px;
+        background: #ECEBE9; color: #0D0D0D;
+        font-family: var(--sans); font-size: 0.95rem; font-weight: 500;
+        padding: 0.95rem; cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .gate-card button:hover { background: #fff; transform: translateY(-1px); }
+      .gate-card .hint { margin-top: 1.3rem; font-size: 0.7rem; color: var(--ink-ghost); }
+
+      /* ---------- appstack integration ---------- */
+      .integration {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 1.1rem;
+      }
+      .integration > * { min-width: 0; }
+      .integration h2 { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; color: var(--ink-bright); margin-bottom: 0.45rem; }
+      .integration p { font-size: 0.84rem; line-height: 1.6; color: var(--ink-muted); }
+      .int-right { display: grid; gap: 0.6rem; justify-items: start; }
+      .int-row { display: flex; gap: 0.5rem; width: 100%; }
+      .int-row input {
+        flex: 1;
+        min-width: 0;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--ink-bright);
+        font-family: var(--sans);
+        font-size: 0.86rem;
+        letter-spacing: 0.06em;
+        padding: 0.6rem 0.8rem;
+      }
+      .int-row input:focus { outline: none; border-color: rgba(134, 216, 223, 0.5); }
+      .int-right small { color: var(--ink-ghost); font-size: 0.72rem; line-height: 1.55; }
+      #int-status[data-tone='off'] { color: var(--ink-faint); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); }
+      @media (max-width: 860px) { .integration { grid-template-columns: 1fr; gap: 1.1rem; } }
+
+      .share-edit {
+        background: none;
+        border: 0;
+        padding: 0 0 1px;
+        color: var(--ink-muted);
+        font: inherit;
+        cursor: pointer;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.28);
+        transition: color 0.25s ease, border-color 0.25s ease;
+      }
+      .share-edit:hover { color: var(--ink-bright); border-color: rgba(134, 216, 223, 0.6); }
+
+      .add-btn {
+        border: 0;
+        border-radius: 999px;
+        background: #ECEBE9;
+        color: #0D0D0D;
+        font-family: var(--sans);
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.55rem 1.15rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .add-btn:hover { background: #fff; transform: translateY(-1px); }
+
+      .aff-cell .avatar { overflow: hidden; }
+      .aff-cell .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+      /* ---------- add/edit modal ---------- */
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(9, 17, 34, 0.72);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        overflow-y: auto;
+      }
+      .modal[hidden] { display: none; }
+      .modal-card {
+        width: 100%;
+        max-width: 33rem;
+        max-height: calc(100vh - 3rem);
+        overflow-y: auto;
+        border: 1px solid var(--card-line);
+        border-radius: 24px;
+        background: #16264a;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        padding: 1.8rem 1.9rem 1.6rem;
+      }
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+      .modal-head h2 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; color: var(--ink-bright); }
+
+      .avatar-row { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 1.3rem; }
+      .avatar-preview {
+        width: 64px;
+        height: 64px;
+        flex: none;
+        border-radius: 50%;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(0, 0, 0, 0.2);
+        font-family: var(--serif);
+        font-size: 1.5rem;
+        color: var(--ink-faint);
+      }
+      .avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .avatar-meta { display: grid; gap: 0.45rem; }
+      .avatar-meta small { color: var(--ink-ghost); font-size: 0.72rem; line-height: 1.5; }
+      .file-btn {
+        display: inline-flex;
+        width: fit-content;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        padding: 0.45rem 1rem;
+        font-size: 0.74rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        color: var(--ink);
+        cursor: pointer;
+        transition: background 0.25s ease;
+      }
+      .file-btn:hover { background: rgba(255, 255, 255, 0.07); }
+
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1rem; }
+      .grid2 label {
+        display: grid;
+        gap: 0.4rem;
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+      .grid2 label small { font-size: 0.64rem; letter-spacing: 0.02em; text-transform: none; color: var(--ink-ghost); }
+      .grid2 input, .grid2 select {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--ink-bright);
+        font-family: var(--sans);
+        font-size: 0.92rem;
+        letter-spacing: 0.02em;
+        padding: 0.7rem 0.85rem;
+      }
+      .grid2 input:focus, .grid2 select:focus { outline: none; border-color: rgba(134, 216, 223, 0.5); }
+      .grid2 input:disabled { opacity: 0.45; cursor: not-allowed; }
+      .grid2 select { appearance: none; }
+
+      .page-line {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+        margin-top: 1.1rem;
+        padding: 0.75rem 0.9rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.14);
+      }
+      .page-line .label { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-ghost); }
+      .page-line code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.78rem; color: var(--ink); }
+
+      .form-err { min-height: 1.1rem; margin: 0.9rem 0 0; font-size: 0.78rem; color: rgba(240, 160, 160, 0.9); }
+      .modal-actions { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.5rem; }
+      .modal-actions .save-btn {
+        margin-left: auto;
+        border: 0;
+        border-radius: 999px;
+        background: #ECEBE9;
+        color: #0D0D0D;
+        font-family: var(--sans);
+        font-size: 0.88rem;
+        font-weight: 500;
+        padding: 0.7rem 1.5rem;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .modal-actions .save-btn:hover { background: #fff; transform: translateY(-1px); }
+      .ghost-btn.danger { color: rgba(240, 160, 160, 0.85); border-color: rgba(240, 160, 160, 0.3); }
+      .ghost-btn.danger:hover { color: #F0A9A9; border-color: rgba(240, 160, 160, 0.6); }
+      .hint-line { margin: 1rem 0 0; font-size: 0.68rem; color: var(--ink-ghost); }
+
+      @media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+
+      .rise { opacity: 0; transform: translateY(16px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+      body.in .rise { opacity: 1; transform: none; }
+      .rise.d1 { transition-delay: 0.08s; }
+      .rise.d2 { transition-delay: 0.16s; }
+      .rise.d3 { transition-delay: 0.24s; }
+
+      @media (max-width: 980px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px) { .tiles { grid-template-columns: 1fr; } }
+      @media (prefers-reduced-motion: reduce) {
+        .drift i { animation: none; }
+        .rise { opacity: 1; transform: none; transition: none; }
+      }
+    </style>
+
+    <script>
+      import { RW } from '../../scripts/affiliates.js';
+
+      const LS_KEY = 'rw_admin';
+      const state = { sortKey: 'verified', sortDir: -1, query: '' };
+      const $ = (id) => document.getElementById(id);
+
+      /* ---------- gate ---------- */
+      function showGate() {
+        $('main').hidden = true;
+        $('gate').hidden = false;
+        document.body.classList.remove('in');
+        setTimeout(() => $('gate-pass').focus(), 50);
+      }
+      $('gate-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        sessionStorage.setItem(LS_KEY, '1');
+        enter();
+      });
+      $('lock-btn').addEventListener('click', () => {
+        sessionStorage.removeItem(LS_KEY);
+        showGate();
+      });
+      function enter() {
+        $('gate').hidden = true;
+        $('main').hidden = false;
+        render();
+        requestAnimationFrame(() => document.body.classList.add('in'));
+      }
+
+      /* ---------- data shaping ---------- */
+      const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+      function rows() {
+        return RW.all().map((a) => {
+          const t = RW.totals(a.code, 0);
+          const p = RW.payoutSummary(a.code);
+          return {
+            a: a,
+            clicks: t.clicks, installs: t.installs, trials: t.trials, paid: t.paid,
+            est: t.estRevenue, verified: t.verifiedRevenue,
+            earned: t.earnings, paidOut: p.paidToDate, owed: p.due,
+            status: p.due >= 1 ? 'due' : 'paid'
+          };
+        });
+      }
+
+      const COLS = [
+        { key: 'name',     label: 'Affiliate',    num: false },
+        { key: 'clicks',   label: 'Clicks',       num: true },
+        { key: 'installs', label: 'Installs',     num: true },
+        { key: 'trials',   label: 'Trials',       num: true },
+        { key: 'paid',     label: 'Paid subs',    num: true },
+        { key: 'verified', label: 'Verified rev', num: true },
+        { key: 'share',    label: 'Share',        num: true },
+        { key: 'earned',   label: 'Earned',       num: true },
+        { key: 'paidOut',  label: 'Paid out',     num: true },
+        { key: 'owed',     label: 'Owed now',     num: true },
+        { key: 'status',   label: 'Status',       num: false },
+        { key: '',         label: '',             num: false }
+      ];
+
+      function sortVal(r, key) {
+        if (key === 'name') return r.a.name.toLowerCase();
+        if (key === 'share') return r.a.share;
+        if (key === 'status') return r.status;
+        return r[key];
+      }
+
+      /* ---------- render ---------- */
+      function render() {
+        const data = rows();
+
+        const t30 = { clicks: 0, verified: 0 };
+        RW.all().forEach((a) => {
+          const t = RW.totals(a.code, 30);
+          t30.clicks += t.clicks;
+          t30.verified += t.verifiedRevenue;
+        });
+        const owedTotal = data.reduce((s, r) => s + r.owed, 0);
+        const dueCount = data.filter((r) => r.status === 'due').length;
+        $('tiles').innerHTML =
+          '<div class="card tile rise"><span class="label">Active affiliates</span><span class="value">' + data.length + '</span><span class="note">' + dueCount + ' awaiting payout</span></div>' +
+          '<div class="card tile rise d1"><span class="label">Clicks · 30 days</span><span class="value">' + RW.num(t30.clicks) + '</span><span class="note">across all affiliates</span></div>' +
+          '<div class="card tile rise d2"><span class="label">Verified revenue · 30 days</span><span class="value">' + RW.money(t30.verified) + '</span><span class="note">net, after refunds</span></div>' +
+          '<div class="card tile rise d3"><span class="label">Owed right now</span><span class="value owed">' + RW.money(owedTotal) + '</span><span class="note">next run: 1st of the month</span></div>';
+
+        $('greet-p').textContent = 'Add partners, manage their pages, settle payouts.';
+
+        renderIntegration();
+        renderHead();
+        renderBody(data);
+      }
+
+      /* ---------- appstack sync ---------- */
+      function renderIntegration() {
+        const key = RW.appstackKey();
+        const status = $('int-status');
+        status.textContent = key ? 'Key saved' : 'Not connected';
+        status.className = 'pill ' + (key ? 'due' : '');
+        if (!key) status.dataset.tone = 'off'; else delete status.dataset.tone;
+        $('int-key').value = key ? '••••••••••••' + key.slice(-4) : '';
+        $('int-key').dataset.masked = key ? '1' : '';
+        $('int-note').textContent = key
+          ? 'Live sync activates once reporting access is enabled for this key.'
+          : 'Paste your AppStack reporting API key to prepare the live sync.';
+      }
+      $('int-key').addEventListener('focus', function () {
+        if (this.dataset.masked) { this.value = ''; this.dataset.masked = ''; }
+      });
+      $('int-save').addEventListener('click', () => {
+        const value = $('int-key').value.trim();
+        if (value && !value.startsWith('•')) RW.setAppstackKey(value);
+        if (!value) RW.setAppstackKey('');
+        renderIntegration();
+      });
+      $('int-test').addEventListener('click', async function () {
+        this.textContent = 'Testing…';
+        const result = await RW.appstackSync();
+        this.textContent = 'Test';
+        $('int-note').textContent = result.message;
+      });
+
+      function renderHead() {
+        $('thead').innerHTML = '<tr>' + COLS.map((c) => {
+          const arrow = c.key === state.sortKey ? '<span class="arrow">' + (state.sortDir > 0 ? '▲' : '▼') + '</span>' : '';
+          return '<th class="' + (c.num ? 'num' : '') + '" data-key="' + c.key + '">' + c.label + arrow + '</th>';
+        }).join('') + '</tr>';
+      }
+
+      function renderBody(data) {
+        const q = state.query.toLowerCase();
+        const list = data.filter((r) =>
+          !q || (r.a.name + ' ' + r.a.handle + ' ' + r.a.code + ' ' + r.a.platform).toLowerCase().indexOf(q) >= 0
+        );
+        list.sort((x, y) => {
+          const a = sortVal(x, state.sortKey), b = sortVal(y, state.sortKey);
+          return (a < b ? -1 : a > b ? 1 : 0) * state.sortDir;
+        });
+
+        $('tbody').innerHTML = list.map((r) => {
+          const a = r.a;
+          const av = a.avatar || a.avatarUrl;
+          const avatarHtml = av
+            ? '<span class="avatar"><img src="' + esc(av) + '" alt="" /></span>'
+            : '<span class="avatar">' + esc(a.name.charAt(0)) + '</span>';
+          return '<tr>' +
+            '<td><div class="aff-cell">' + avatarHtml + '<span class="n"><span class="name">' + esc(a.name) + '</span><br><span class="handle">@' + esc(a.handle) + ' · ' + esc(a.platform) + ' · ' + esc(a.code) + '</span></span></div></td>' +
+            '<td class="num">' + RW.num(r.clicks) + '</td>' +
+            '<td class="num">' + RW.num(r.installs) + '</td>' +
+            '<td class="num">' + RW.num(r.trials) + '</td>' +
+            '<td class="num">' + RW.num(r.paid) + '</td>' +
+            '<td class="num money-strong">' + RW.money(r.verified) + '</td>' +
+            '<td class="num"><button class="share-edit" data-share-edit="' + esc(a.code) + '" title="Edit revenue share">' + Math.round(a.share * 100) + '%</button></td>' +
+            '<td class="num">' + RW.money(r.earned) + '</td>' +
+            '<td class="num">' + RW.money(r.paidOut) + '</td>' +
+            '<td class="num ' + (r.owed >= 1 ? 'owed-cell' : '') + '">' + RW.money(r.owed) + '</td>' +
+            '<td><span class="pill ' + r.status + '">' + (r.status === 'due' ? 'Payout due' : 'Paid up') + '</span></td>' +
+            '<td style="text-align:right"><button class="pay-btn" data-edit="' + esc(a.code) + '">Edit</button> <button class="pay-btn" data-code="' + esc(a.code) + '" ' + (r.owed < 1 ? 'disabled' : '') + '>Mark paid</button></td>' +
+            '</tr>';
+        }).join('');
+
+        const tot = list.reduce((s, r) => {
+          s.clicks += r.clicks; s.installs += r.installs; s.trials += r.trials; s.paid += r.paid;
+          s.verified += r.verified; s.earned += r.earned; s.paidOut += r.paidOut; s.owed += r.owed;
+          return s;
+        }, { clicks: 0, installs: 0, trials: 0, paid: 0, verified: 0, earned: 0, paidOut: 0, owed: 0 });
+        $('tfoot').innerHTML = '<tr>' +
+          '<td>' + list.length + ' affiliate' + (list.length === 1 ? '' : 's') + '</td>' +
+          '<td class="num">' + RW.num(tot.clicks) + '</td>' +
+          '<td class="num">' + RW.num(tot.installs) + '</td>' +
+          '<td class="num">' + RW.num(tot.trials) + '</td>' +
+          '<td class="num">' + RW.num(tot.paid) + '</td>' +
+          '<td class="num">' + RW.money(tot.verified) + '</td>' +
+          '<td class="num"></td>' +
+          '<td class="num">' + RW.money(tot.earned) + '</td>' +
+          '<td class="num">' + RW.money(tot.paidOut) + '</td>' +
+          '<td class="num">' + RW.money(tot.owed) + '</td>' +
+          '<td></td><td></td></tr>';
+      }
+
+      /* ---------- events ---------- */
+      $('thead').addEventListener('click', (e) => {
+        const th = e.target.closest('th');
+        if (!th || !th.dataset.key) return;
+        const key = th.dataset.key;
+        if (state.sortKey === key) state.sortDir *= -1;
+        else { state.sortKey = key; state.sortDir = key === 'name' ? 1 : -1; }
+        renderHead();
+        renderBody(rows());
+      });
+
+      $('search').addEventListener('input', function () {
+        state.query = this.value;
+        renderBody(rows());
+      });
+
+      $('tbody').addEventListener('click', (e) => {
+        const shareBtn = e.target.closest('.share-edit');
+        if (shareBtn) {
+          openModal(shareBtn.dataset.shareEdit, true);
+          return;
+        }
+        const btn = e.target.closest('.pay-btn');
+        if (!btn || btn.disabled) return;
+        if (btn.dataset.edit) {
+          openModal(btn.dataset.edit);
+          return;
+        }
+        RW.markPaid(btn.dataset.code);
+        render();
+      });
+
+      /* ---------- add / edit affiliate ---------- */
+      let editingCode = null;
+      let pendingAvatar = null;
+
+      function slug(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9._]/g, '').slice(0, 32);
+      }
+      function codeFrom(handle) {
+        return slug(handle).replace(/[^a-z0-9]/g, '').toUpperCase().slice(0, 8);
+      }
+      function setAvatarPreview(src, fallback) {
+        const box = $('avatar-preview');
+        box.innerHTML = src ? '<img src="' + esc(src) + '" alt="" />' : '<span>' + esc(fallback || '?') + '</span>';
+      }
+
+      function openModal(code, focusShare) {
+        editingCode = code || null;
+        pendingAvatar = null;
+        $('form-err').textContent = '';
+        const a = code ? RW.byCode(code) : null;
+        $('modal-title').textContent = a ? 'Edit ' + a.name : 'Add affiliate';
+        $('f-name').value = a ? a.name : '';
+        $('f-person').value = a ? (a.person || '') : '';
+        $('f-handle').value = a ? a.handle : '';
+        $('f-code').value = a ? a.code : '';
+        $('f-platform').value = a ? a.platform : 'Instagram';
+        $('f-share').value = a ? Math.round(a.share * 100) : 30;
+        $('f-joined').value = a ? a.joined : new Date().toISOString().slice(0, 10);
+        $('f-code').disabled = !!a;
+        $('f-joined').disabled = !!a && RW.isSeeded(a.code);
+        pendingAvatar = a ? (a.avatar || null) : null;
+        setAvatarPreview(a ? (a.avatar || a.avatarUrl) : null, a ? a.name.charAt(0) : '?');
+        $('delete-aff').hidden = !(a && RW.isCustom(a.code));
+        $('page-line').hidden = !a;
+        if (a) {
+          $('page-url').textContent = 'rewiremission.com/affiliate?a=' + a.handle;
+          $('page-open').href = '/affiliate/?a=' + a.handle;
+        }
+        $('modal').hidden = false;
+        setTimeout(() => {
+          if (focusShare) { $('f-share').focus(); $('f-share').select(); }
+          else $('f-name').focus();
+        }, 50);
+      }
+      function closeModal() { $('modal').hidden = true; }
+
+      $('add-btn').addEventListener('click', () => openModal(null));
+      $('modal-close').addEventListener('click', closeModal);
+      $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('modal').hidden) closeModal(); });
+
+      // auto-fill handle from name, code from handle, while adding
+      $('f-name').addEventListener('input', () => {
+        if (editingCode) return;
+        if (!$('f-handle').dataset.touched) $('f-handle').value = slug($('f-name').value.replace(/\s+/g, ''));
+        if (!$('f-code').dataset.touched) $('f-code').value = codeFrom($('f-handle').value);
+      });
+      $('f-handle').addEventListener('input', function () {
+        this.dataset.touched = '1';
+        this.value = slug(this.value);
+        if (!editingCode && !$('f-code').dataset.touched) $('f-code').value = codeFrom(this.value);
+      });
+      $('f-code').addEventListener('input', function () {
+        this.dataset.touched = '1';
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      });
+
+      // icon upload: downscale to 128px so it fits browser storage
+      $('f-avatar').addEventListener('change', function () {
+        const file = this.files && this.files[0];
+        if (!file) return;
+        const img = new Image();
+        img.onload = () => {
+          const size = 128;
+          const canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const scale = Math.max(size / img.width, size / img.height);
+          const w = img.width * scale, h = img.height * scale;
+          ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+          pendingAvatar = canvas.toDataURL('image/jpeg', 0.85);
+          setAvatarPreview(pendingAvatar);
+          URL.revokeObjectURL(img.src);
+        };
+        img.src = URL.createObjectURL(file);
+      });
+
+      $('aff-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = $('f-name').value.trim();
+        const handle = slug($('f-handle').value);
+        const code = $('f-code').value.trim().toUpperCase();
+        const share = Math.min(95, Math.max(1, Math.round(+$('f-share').value || 30))) / 100;
+        const joined = $('f-joined').value || new Date().toISOString().slice(0, 10);
+        const err = $('form-err');
+        if (!name) { err.textContent = 'Give them a name.'; return; }
+        if (handle.length < 2) { err.textContent = 'Handle needs at least 2 characters (a-z, 0-9, dots, underscores).'; return; }
+        if (code.length < 2) { err.textContent = 'Login code needs at least 2 characters.'; return; }
+        if (!editingCode && RW.byCode(code)) { err.textContent = 'That login code is taken.'; return; }
+        if (RW.all().some((x) => x.handle === handle && x.code !== (editingCode || code))) { err.textContent = 'That handle is taken.'; return; }
+
+        const existing = editingCode ? RW.byCode(editingCode) : null;
+        RW.saveAffiliate({
+          code: editingCode || code,
+          name,
+          person: $('f-person').value.trim() || name.split(' ')[0],
+          handle,
+          platform: $('f-platform').value,
+          share,
+          size: existing ? existing.size : 0.4,
+          joined: existing && RW.isSeeded(existing.code) ? existing.joined : joined,
+          avatar: pendingAvatar || (existing && existing.avatar) || undefined
+        });
+        closeModal();
+        render();
+      });
+
+      $('delete-aff').addEventListener('click', () => {
+        if (!editingCode || !RW.isCustom(editingCode)) return;
+        if (!confirm('Remove this affiliate? Their page link stops resolving.')) return;
+        RW.removeAffiliate(editingCode);
+        closeModal();
+        render();
+      });
+
+      $('copy-config').addEventListener('click', function () {
+        const a = {
+          code: (editingCode || $('f-code').value.trim().toUpperCase()),
+          name: $('f-name').value.trim(),
+          person: $('f-person').value.trim(),
+          handle: slug($('f-handle').value),
+          platform: $('f-platform').value,
+          share: Math.round(+$('f-share').value || 30) / 100,
+          size: 0.4,
+          joined: $('f-joined').value
+        };
+        const snippet = "  { code: '" + a.code + "', name: '" + a.name.replace(/'/g, "\\'") + "', person: '" + a.person.replace(/'/g, "\\'") + "', handle: '" + a.handle + "', platform: '" + a.platform + "', share: " + a.share + ', size: ' + a.size + ", joined: '" + a.joined + "' },";
+        navigator.clipboard.writeText(snippet).then(() => {
+          this.textContent = 'Copied';
+          setTimeout(() => { this.textContent = 'Copy config'; }, 1600);
+        });
+      });
+
+      $('reset-btn').addEventListener('click', () => {
+        RW.resetPayouts();
+        render();
+      });
+
+      $('export-btn').addEventListener('click', () => {
+        const head = ['Name', 'Handle', 'Code', 'Platform', 'Joined', 'Clicks', 'Installs', 'Trials', 'Paid subs', 'Verified revenue', 'Share', 'Earned', 'Paid out', 'Owed'];
+        const lines = [head.join(',')].concat(rows().map((r) =>
+          [
+            '"' + r.a.name + '"', '@' + r.a.handle, r.a.code, r.a.platform, r.a.joined,
+            r.clicks, r.installs, r.trials, r.paid,
+            r.verified.toFixed(2), (r.a.share * 100) + '%', r.earned.toFixed(2), r.paidOut.toFixed(2), r.owed.toFixed(2)
+          ].join(',')
+        ));
+        const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'rewire-affiliates-' + new Date().toISOString().slice(0, 10) + '.csv';
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+
+      /* ---------- boot ---------- */
+      if (sessionStorage.getItem(LS_KEY)) enter(); else showGate();
+    </script>
+  </body>
+</html>
