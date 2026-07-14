@@ -322,11 +322,11 @@
     /* TikTok in-app browser tip */
     .iab {
       position: fixed;
-      top: 0.9rem;
-      right: 0.9rem;
+      top: 0.75rem;
+      right: 0.7rem;
       z-index: 100;
       display: none;
-      max-width: min(21rem, calc(100vw - 1.8rem));
+      max-width: min(21rem, calc(100vw - 1.4rem));
     }
     .iab.show { display: block; }
     .iab .card {
@@ -342,7 +342,7 @@
       content: '';
       position: absolute;
       top: -6.5px;
-      right: 24px;
+      right: 10px;
       width: 12px;
       height: 12px;
       background: rgba(24, 36, 68, 0.97);
@@ -389,6 +389,43 @@
       40% { transform: scale(1.05); }
     }
     .iab .card.pulse { animation: iabPulse 0.5s ease; }
+
+    .iab-hint {
+      position: fixed;
+      left: 50%;
+      bottom: 30vh;
+      transform: translateX(-50%);
+      z-index: 110;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .iab-hint.show { display: flex; }
+    .iab-hint .pill {
+      background: #1B2C55;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      font-size: 0.92rem;
+      font-weight: 500;
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      white-space: nowrap;
+      animation: iabIn 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .iab-hint .pill strong { font-weight: 700; }
+    .iab-hint .arrow {
+      font-size: 2.1rem;
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+      animation: iabBounce 0.9s ease-in-out infinite;
+    }
+    @keyframes iabBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(12px); }
+    }
   </style>
 </head>
 <body>
@@ -400,11 +437,16 @@
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
   <div class="iab" id="iab" role="status">
-    <div class="card">
-      <p class="iab-title">TikTok blocks App Store links</p>
+    <div class="card" id="iabCard">
+      <p class="iab-title">Download Rewire</p>
       <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button in the top right</span></div>
       <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
     </div>
+  </div>
+
+  <div class="iab-hint" id="iabHint" aria-hidden="true">
+    <span class="pill">Tap <strong>Open in browser</strong></span>
+    <span class="arrow">&#8595;</span>
   </div>
 
   <main class="page">
@@ -444,10 +486,15 @@
       var ua = navigator.userAgent || '';
       var inTikTok = /musical_ly|bytedance|tiktok|trill/i.test(ua) || /[?&]iab=1/.test(location.search);
       if (!inTikTok) return;
-      document.getElementById('iab').classList.add('show');
+      var iab = document.getElementById('iab');
+      var card = document.getElementById('iabCard');
+      var hint = document.getElementById('iabHint');
+      iab.classList.add('show');
       var cta = document.querySelector('.cta-row .store');
+      var ctaTapped = 0;
       cta.addEventListener('click', function (e) {
         e.preventDefault();
+        ctaTapped = Date.now();
         var url = cta.href;
         try {
           if (/android/i.test(ua)) {
@@ -458,12 +505,29 @@
         } catch (err) {}
         setTimeout(function () {
           if (document.visibilityState === 'visible') {
-            var card = document.querySelector('#iab .card');
             card.classList.remove('pulse');
             void card.offsetWidth;
             card.classList.add('pulse');
           }
         }, 1200);
+      });
+      // TikTok's ... menu is native UI, invisible to the page - but opening
+      // it steals focus from the webview while the page stays visible behind
+      // the dimmed sheet. Use blur as the signal to swap the card for a
+      // bottom arrow pointing at the sheet's "Open in browser" row.
+      window.addEventListener('blur', function () {
+        if (Date.now() - ctaTapped < 1000) return;
+        if (document.visibilityState !== 'visible') return;
+        iab.classList.remove('show');
+        hint.classList.add('show');
+      });
+      function sheetClosed() {
+        hint.classList.remove('show');
+        iab.classList.add('show');
+      }
+      window.addEventListener('focus', sheetClosed);
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') sheetClosed();
       });
     })();
   </script>
