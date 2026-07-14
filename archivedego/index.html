@@ -318,6 +318,77 @@
       .drift i, .halo .core { animation: none; }
       .js .rise { opacity: 1; transform: none; filter: none; transition: none; }
     }
+
+    /* TikTok in-app browser tip */
+    .iab {
+      position: fixed;
+      top: 0.9rem;
+      right: 0.9rem;
+      z-index: 100;
+      display: none;
+      max-width: min(21rem, calc(100vw - 1.8rem));
+    }
+    .iab.show { display: block; }
+    .iab .card {
+      position: relative;
+      background: rgba(24, 36, 68, 0.97);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+      padding: 1rem 1.15rem;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 60px rgba(150, 170, 240, 0.10);
+      animation: iabIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .iab .card::before {
+      content: '';
+      position: absolute;
+      top: -6.5px;
+      right: 24px;
+      width: 12px;
+      height: 12px;
+      background: rgba(24, 36, 68, 0.97);
+      border-left: 1px solid rgba(255, 255, 255, 0.16);
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      transform: rotate(45deg);
+    }
+    .iab-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--ink-bright);
+      margin-bottom: 0.7rem;
+    }
+    .iab-step {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: rgba(235, 235, 235, 0.75);
+    }
+    .iab-step + .iab-step { margin-top: 0.5rem; }
+    .iab-step .n {
+      flex: none;
+      width: 1.2rem;
+      height: 1.2rem;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--ink-bright);
+    }
+    .iab-step strong { font-weight: 500; color: #fff; }
+    @keyframes iabIn {
+      from { opacity: 0; transform: translateY(-14px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes iabPulse {
+      0%, 100% { transform: scale(1); }
+      40% { transform: scale(1.05); }
+    }
+    .iab .card.pulse { animation: iabPulse 0.5s ease; }
   </style>
 </head>
 <body>
@@ -327,6 +398,14 @@
 
   <a class="corner brand" href="/">Rewire</a>
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
+
+  <div class="iab" id="iab" role="status">
+    <div class="card">
+      <p class="iab-title">TikTok blocks App Store links</p>
+      <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button in the top right</span></div>
+      <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
+    </div>
+  </div>
 
   <main class="page">
     <div class="banner rise" aria-hidden="true">
@@ -355,6 +434,38 @@
 
   <script>
     setTimeout(() => document.querySelector('.page').classList.add('in'), 160);
+  </script>
+
+  <script>
+    // TikTok's webview blocks App Store navigations: show escape steps and
+    // try to break out to the real browser on tap (intent:// is reliable on
+    // Android; x-safari- works on some iOS versions, otherwise silent no-op).
+    (function () {
+      var ua = navigator.userAgent || '';
+      var inTikTok = /musical_ly|bytedance|tiktok|trill/i.test(ua) || /[?&]iab=1/.test(location.search);
+      if (!inTikTok) return;
+      document.getElementById('iab').classList.add('show');
+      var cta = document.querySelector('.cta-row .store');
+      cta.addEventListener('click', function (e) {
+        e.preventDefault();
+        var url = cta.href;
+        try {
+          if (/android/i.test(ua)) {
+            location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;end';
+          } else {
+            location.href = 'x-safari-' + url;
+          }
+        } catch (err) {}
+        setTimeout(function () {
+          if (document.visibilityState === 'visible') {
+            var card = document.querySelector('#iab .card');
+            card.classList.remove('pulse');
+            void card.offsetWidth;
+            card.classList.add('pulse');
+          }
+        }, 1200);
+      });
+    })();
   </script>
 
 </body>
