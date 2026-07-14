@@ -342,14 +342,14 @@
     .iab-overlay.show { display: block; }
     .iab-up {
       position: absolute;
-      top: 1.5rem;
-      right: 2.2rem;
-      font-size: 2.3rem;
-      line-height: 1;
-      color: #fff;
-      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+      top: 0.6rem;
+      right: 1rem;
+      width: 52px;
+      height: 52px;
+      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
       animation: iabBounceUp 1.1s ease-in-out infinite;
     }
+    .iab-up svg { display: block; width: 100%; height: 100%; }
     .iab-steps {
       position: absolute;
       left: 50%;
@@ -437,12 +437,16 @@
       animation-delay: 1.8s;
     }
     .mock-row svg { width: 1.45rem; height: 1.45rem; flex: none; display: block; }
-    .iab-onote {
-      margin-top: 1rem;
-      text-align: center;
-      font-size: 0.78rem;
+    .iab-htitle {
+      font-family: var(--serif);
       font-weight: 400;
-      color: rgba(134, 216, 223, 0.9);
+      font-size: 1.55rem;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--ink-bright);
+      text-align: center;
+      text-wrap: balance;
+      margin-bottom: 1.4rem;
     }
     @keyframes iabTarget {
       0% { box-shadow: 0 0 0 0 rgba(254, 44, 85, 0.5); transform: scale(1); }
@@ -503,8 +507,9 @@
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
   <div class="iab-overlay" id="iabOverlay" aria-hidden="true">
-    <div class="iab-up">&#8599;</div>
+    <div class="iab-up" aria-hidden="true"><svg viewBox="0 0 52 52" fill="none"><path d="M10 42 L40 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 10 L41 11 L42 28" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
     <div class="iab-steps">
+      <p class="iab-htitle">To download Rewire,<br>open in your browser</p>
       <div class="iab-lbl"><span class="n">1</span><span>Tap <strong>&#8226;&#8226;&#8226;</strong> in the top corner</span></div>
       <div class="mock-bar">
         <span class="mb-back">&#8249;</span>
@@ -517,7 +522,6 @@
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.25" stroke="#111" stroke-width="1.5"/><path d="M15.7 8.3l-2.3 5.1-5.1 2.3 2.3-5.1z" fill="#111"/></svg>
         <span>Open in browser</span>
       </div>
-      <p class="iab-onote">TikTok sometimes blocks App Store links.<br>Do this and the App Store opens automatically.</p>
     </div>
   </div>
 
