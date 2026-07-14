@@ -342,10 +342,10 @@
     .iab-overlay.show { display: block; }
     .iab-up {
       position: absolute;
-      top: 0.6rem;
-      right: 1rem;
-      width: 52px;
-      height: 52px;
+      top: 0.5rem;
+      right: 1.2rem;
+      width: 44px;
+      height: 104px;
       filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
       animation: iabBounceUp 1.1s ease-in-out infinite;
     }
@@ -353,7 +353,7 @@
     .iab-steps {
       position: absolute;
       left: 50%;
-      top: 45%;
+      top: 53%;
       transform: translate(-50%, -50%);
       width: min(19.5rem, calc(100vw - 2.5rem));
       animation: iabIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -438,15 +438,29 @@
     }
     .mock-row svg { width: 1.45rem; height: 1.45rem; flex: none; display: block; }
     .iab-htitle {
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: 1.55rem;
-      line-height: 1.3;
-      letter-spacing: -0.01em;
-      color: var(--ink-bright);
+      position: absolute;
+      left: 50%;
+      top: 20vh;
+      transform: translate(-50%, -50%);
+      width: min(20rem, calc(100vw - 2.5rem));
       text-align: center;
-      text-wrap: balance;
-      margin-bottom: 1.4rem;
+      font-family: var(--sans);
+      color: var(--ink-bright);
+      animation: iabIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .iab-htitle b {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.45rem;
+    }
+    .iab-htitle span {
+      display: block;
+      font-size: 0.98rem;
+      font-weight: 300;
+      line-height: 1.5;
+      color: rgba(235, 235, 235, 0.75);
     }
     @keyframes iabTarget {
       0% { box-shadow: 0 0 0 0 rgba(254, 44, 85, 0.5); transform: scale(1); }
@@ -455,7 +469,7 @@
     }
     @keyframes iabBounceUp {
       0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(8px, -9px); }
+      50% { transform: translate(2px, -8px); }
     }
     @keyframes iabIn {
       from { opacity: 0; transform: translate(-50%, -50%) translateY(14px); }
@@ -507,9 +521,9 @@
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
   <div class="iab-overlay" id="iabOverlay" aria-hidden="true">
-    <div class="iab-up" aria-hidden="true"><svg viewBox="0 0 52 52" fill="none"><path d="M10 42 L40 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 10 L41 11 L42 28" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+    <div class="iab-up" aria-hidden="true"><svg viewBox="0 0 44 104" fill="none"><path d="M13 96 C 15 66, 21 42, 29 16" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/><path d="M16 30 L29 13 L37 33" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <p class="iab-htitle"><b>Almost there!</b><span>Open in your browser to download Rewire.</span></p>
     <div class="iab-steps">
-      <p class="iab-htitle">To download Rewire,<br>open in your browser</p>
       <div class="iab-lbl"><span class="n">1</span><span>Tap <strong>&#8226;&#8226;&#8226;</strong> in the top corner</span></div>
       <div class="mock-bar">
         <span class="mb-back">&#8249;</span>
