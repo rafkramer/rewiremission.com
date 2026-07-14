@@ -330,60 +330,128 @@
     }
 
     /* TikTok in-app browser: guided flow, shown only after a blocked Download tap */
-    .iab-step {
+    .iab-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 105;
+      display: none;
+      background: rgba(5, 10, 24, 0.78);
+      -webkit-backdrop-filter: blur(9px);
+      backdrop-filter: blur(9px);
+    }
+    .iab-overlay.show { display: block; }
+    .iab-up {
+      position: absolute;
+      top: 0.4rem;
+      right: 1.1rem;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+      animation: iabBounceUp 0.9s ease-in-out infinite;
+    }
+    .iab-steps {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -50%);
+      width: min(19.5rem, calc(100vw - 2.5rem));
+      animation: iabIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .iab-lbl {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      font-size: 0.84rem;
-      font-weight: 300;
-      color: rgba(235, 235, 235, 0.8);
-      white-space: nowrap;
+      gap: 0.55rem;
+      margin: 0 0 0.55rem 0.15rem;
+      font-size: 0.86rem;
+      font-weight: 400;
+      color: rgba(235, 235, 235, 0.85);
     }
-    .iab-step + .iab-step { margin-top: 0.55rem; }
-    .iab-step .n {
+    .iab-lbl strong { color: #fff; font-weight: 500; }
+    .iab-lbl .n {
       flex: none;
       width: 1.25rem;
       height: 1.25rem;
       display: grid;
       place-items: center;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.08);
       font-size: 0.64rem;
       font-weight: 500;
       color: var(--ink-bright);
     }
-    .iab-step strong { font-weight: 500; color: #fff; }
-    @keyframes iabIn {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: none; }
-    }
-    .iab-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 105;
-      display: none;
+    /* replica of TikTok's browser top bar */
+    .mock-bar {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      background: rgba(5, 10, 24, 0.72);
-      -webkit-backdrop-filter: blur(7px);
-      backdrop-filter: blur(7px);
+      gap: 0.7rem;
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.7rem 0.95rem;
+      margin-bottom: 1.15rem;
+      font-family: -apple-system, 'Helvetica Neue', sans-serif;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
     }
-    .iab-overlay.show { display: flex; }
-    .iab-overlay .ocard {
-      max-width: calc(100vw - 3rem);
-      background: #182444;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 18px;
-      padding: 1.1rem 1.3rem;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6), 0 0 60px rgba(150, 170, 240, 0.12);
-      animation: iabIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    .mock-bar .mb-nav { color: #111; font-size: 1.05rem; line-height: 1; }
+    .mock-bar .mb-title {
+      flex: 1;
+      text-align: center;
+      color: #111;
+      font-weight: 700;
+      font-size: 0.8rem;
+      line-height: 1.2;
     }
-    .iab-onote {
-      margin-top: 0.8rem;
-      font-size: 0.74rem;
+    .mock-bar .mb-title small {
+      display: block;
       font-weight: 400;
-      color: rgba(134, 216, 223, 0.85);
+      font-size: 0.64rem;
+      color: #8a8a8a;
+    }
+    .mock-bar .mb-dots {
+      color: #111;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.45rem;
+      border-radius: 999px;
+      animation: iabTarget 1.6s ease-out infinite;
+    }
+    /* replica of the sheet's Open in browser row */
+    .mock-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.95rem 1.05rem;
+      font-family: -apple-system, 'Helvetica Neue', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #111;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+      animation: iabTarget 1.6s ease-out infinite;
+      animation-delay: 0.8s;
+    }
+    .mock-row svg { width: 1.35rem; height: 1.35rem; flex: none; display: block; }
+    .iab-onote {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: rgba(134, 216, 223, 0.9);
+    }
+    @keyframes iabTarget {
+      0% { box-shadow: 0 0 0 0 rgba(254, 44, 85, 0.55); }
+      70%, 100% { box-shadow: 0 0 0 12px rgba(254, 44, 85, 0); }
+    }
+    @keyframes iabBounceUp {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes iabIn {
+      from { opacity: 0; transform: translate(-50%, -50%) translateY(14px); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
     }
     .iab-hint {
       position: fixed;
@@ -407,7 +475,6 @@
       border-radius: 999px;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       white-space: nowrap;
-      animation: iabIn 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     }
     .iab-hint .pill strong { font-weight: 700; }
     .iab-hint .arrow {
@@ -432,9 +499,20 @@
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
   <div class="iab-overlay" id="iabOverlay" aria-hidden="true">
-    <div class="ocard">
-      <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button top right</span></div>
-      <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
+    <div class="iab-up">&#8593;</div>
+    <div class="iab-steps">
+      <div class="iab-lbl"><span class="n">1</span><span>Tap <strong>&#8226;&#8226;&#8226;</strong> in the top corner</span></div>
+      <div class="mock-bar">
+        <span class="mb-nav">&#8249;</span>
+        <span class="mb-nav">&#10005;</span>
+        <span class="mb-title">Download Rewire<small>rewiremission.com</small></span>
+        <span class="mb-dots">&#8226;&#8226;&#8226;</span>
+      </div>
+      <div class="iab-lbl"><span class="n">2</span><span>Choose</span></div>
+      <div class="mock-row">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.25" stroke="#111" stroke-width="1.5"/><path d="M15.7 8.3l-2.3 5.1-5.1 2.3 2.3-5.1z" fill="#111"/></svg>
+        <span>Open in browser</span>
+      </div>
       <p class="iab-onote">The App Store opens automatically.</p>
     </div>
   </div>
@@ -475,11 +553,11 @@
 
   <script>
     // TikTok's webview blocks App Store navigations. The page stays plain;
-    // a Download tap stamps ?go=1 and attempts a breakout (intent:// on
-    // Android, x-safari- on iOS). Only if the page is still visible 1.4s
-    // later (escape failed) does the guided overlay appear. "Open in
-    // browser" then reopens the stamped URL outside TikTok, where the head
-    // script forwards straight to the store.
+    // a Download tap attempts a breakout (intent:// on Android, x-safari-
+    // on iOS). If the page is still visible 1.4s later the escape failed:
+    // reload with ?go=1 (a real navigation, so TikTok's "Open in browser"
+    // carries it) and show the guide. Outside the webview, go=1 makes the
+    // head script forward straight to the store.
     (function () {
       var ua = navigator.userAgent || '';
       var inTikTok = /musical_ly|bytedance|tiktok|trill/i.test(ua) || /[?&]iab=1/.test(location.search);
@@ -490,6 +568,7 @@
       var mode = 'none';
       var ctaTapped = 0;
       var escaped = false;
+      var hasGo = /[?&]go=1/.test(location.search);
 
       function show(which) {
         mode = which;
@@ -497,8 +576,8 @@
         hint.classList.toggle('show', which === 'hint');
       }
 
-      // debug preview of the failure state: ?iab=1&go=1
-      if (/[?&]iab=1/.test(location.search) && /[?&]go=1/.test(location.search)) show('overlay');
+      // go=1 is only ever stamped after a blocked Download tap: resume the guide.
+      if (hasGo) show('overlay');
 
       window.addEventListener('pagehide', function () { escaped = true; });
       document.addEventListener('visibilitychange', function () {
@@ -510,11 +589,6 @@
         e.preventDefault();
         ctaTapped = Date.now();
         escaped = false;
-        // Carry intent in the URL: TikTok's "Open in browser" reopens this
-        // exact URL, and go=1 outside the webview forwards to the store.
-        if (!/[?&]go=1/.test(location.search)) {
-          history.replaceState(null, '', location.pathname + (location.search ? location.search + '&go=1' : '?go=1') + location.hash);
-        }
         var url = cta.href;
         try {
           if (/android/i.test(ua)) {
@@ -524,7 +598,9 @@
           }
         } catch (err) {}
         setTimeout(function () {
-          if (!escaped && document.visibilityState === 'visible') show('overlay');
+          if (escaped || document.visibilityState !== 'visible') return;
+          if (hasGo) show('overlay');
+          else location.replace(location.pathname + (location.search ? location.search + '&go=1' : '?go=1') + location.hash);
         }, 1400);
       });
 
