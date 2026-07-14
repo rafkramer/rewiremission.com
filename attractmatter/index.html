@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Try Rewire free</title>
+  <title>Download Rewire</title>
   <meta name="description" content="Try Rewire for free. Access & reprogram your subconscious mind.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#13223F">
@@ -329,126 +329,62 @@
       .js .rise { opacity: 1; transform: none; filter: none; transition: none; }
     }
 
-    /* TikTok in-app browser tip */
-    .iab {
-      position: fixed;
-      top: 0.75rem;
-      right: 0.7rem;
-      z-index: 100;
-      display: none;
-      max-width: min(21rem, calc(100vw - 1.4rem));
-    }
-    .iab.show { display: block; }
-    .iab .card {
-      position: relative;
-      background: rgba(24, 36, 68, 0.97);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 16px;
-      padding: 1rem 1.15rem;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 60px rgba(150, 170, 240, 0.10);
-      animation: iabIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    }
-    .iab .card::before {
-      content: '';
-      position: absolute;
-      top: -6.5px;
-      right: 10px;
-      width: 12px;
-      height: 12px;
-      background: rgba(24, 36, 68, 0.97);
-      border-left: 1px solid rgba(255, 255, 255, 0.16);
-      border-top: 1px solid rgba(255, 255, 255, 0.16);
-      transform: rotate(45deg);
-    }
-    .iab-title {
-      font-size: 0.88rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      color: var(--ink-bright);
-      margin-bottom: 0.7rem;
-    }
+    /* TikTok in-app browser: guided flow, shown only after a blocked Download tap */
     .iab-step {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      font-size: 0.8rem;
+      font-size: 0.84rem;
       font-weight: 300;
-      color: rgba(235, 235, 235, 0.75);
+      color: rgba(235, 235, 235, 0.8);
+      white-space: nowrap;
     }
-    .iab-step + .iab-step { margin-top: 0.5rem; }
+    .iab-step + .iab-step { margin-top: 0.55rem; }
     .iab-step .n {
       flex: none;
-      width: 1.2rem;
-      height: 1.2rem;
+      width: 1.25rem;
+      height: 1.25rem;
       display: grid;
       place-items: center;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.06);
-      font-size: 0.62rem;
+      font-size: 0.64rem;
       font-weight: 500;
       color: var(--ink-bright);
     }
     .iab-step strong { font-weight: 500; color: #fff; }
     @keyframes iabIn {
-      from { opacity: 0; transform: translateY(-14px); }
+      from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: none; }
     }
-    /* guided flow after a blocked Download tap */
     .iab-overlay {
       position: fixed;
       inset: 0;
       z-index: 105;
       display: none;
+      align-items: center;
+      justify-content: center;
       background: rgba(5, 10, 24, 0.72);
       -webkit-backdrop-filter: blur(7px);
       backdrop-filter: blur(7px);
     }
-    .iab-overlay.show { display: block; }
+    .iab-overlay.show { display: flex; }
     .iab-overlay .ocard {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.7rem;
-      max-width: min(22rem, calc(100vw - 1.4rem));
+      max-width: calc(100vw - 3rem);
       background: #182444;
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 18px;
-      padding: 1.15rem 1.25rem 1.2rem;
+      padding: 1.1rem 1.3rem;
       box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6), 0 0 60px rgba(150, 170, 240, 0.12);
-      animation: iabIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    }
-    .iab-overlay .ocard::before {
-      content: '';
-      position: absolute;
-      top: -6.5px;
-      right: 10px;
-      width: 12px;
-      height: 12px;
-      background: #182444;
-      border-left: 1px solid rgba(255, 255, 255, 0.18);
-      border-top: 1px solid rgba(255, 255, 255, 0.18);
-      transform: rotate(45deg);
-    }
-    .iab-otitle {
-      font-size: 1.02rem;
-      font-weight: 500;
-      color: var(--ink-bright);
-      margin-bottom: 0.3rem;
-    }
-    .iab-osub {
-      font-size: 0.78rem;
-      font-weight: 300;
-      line-height: 1.55;
-      color: rgba(235, 235, 235, 0.6);
-      margin-bottom: 0.85rem;
+      animation: iabIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     }
     .iab-onote {
-      margin-top: 0.9rem;
-      font-size: 0.78rem;
+      margin-top: 0.8rem;
+      font-size: 0.74rem;
       font-weight: 400;
       color: rgba(134, 216, 223, 0.85);
     }
-    /* arrow to the native sheet's Open in browser row */
     .iab-hint {
       position: fixed;
       left: 50%;
@@ -485,11 +421,6 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(12px); }
     }
-    @keyframes iabPulse {
-      0%, 100% { transform: scale(1); }
-      40% { transform: scale(1.05); }
-    }
-    .iab .card.pulse { animation: iabPulse 0.5s ease; }
   </style>
 </head>
 <body>
@@ -500,19 +431,9 @@
   <a class="corner brand" href="/">Rewire</a>
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
-  <div class="iab" id="iab" role="status">
-    <div class="card" id="iabCard">
-      <p class="iab-title">Download Rewire</p>
-      <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button in the top right</span></div>
-      <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
-    </div>
-  </div>
-
   <div class="iab-overlay" id="iabOverlay" aria-hidden="true">
     <div class="ocard">
-      <p class="iab-otitle">One more step</p>
-      <p class="iab-osub">TikTok blocked the App Store. Open this page in your browser instead:</p>
-      <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button in the top right</span></div>
+      <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button top right</span></div>
       <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
       <p class="iab-onote">The App Store opens automatically.</p>
     </div>
@@ -553,39 +474,36 @@
   </script>
 
   <script>
-    // TikTok's webview blocks App Store navigations. Flow: on Download tap,
-    // stamp go=1 into the URL and attempt an automatic breakout (intent:// on
-    // Android, x-safari- on iOS). If the page is still visible 1.4s later the
-    // escape failed, so a guided overlay walks them to "Open in browser" -
-    // which reopens this URL outside TikTok, where go=1 (head script)
-    // forwards straight to the store.
+    // TikTok's webview blocks App Store navigations. The page stays plain;
+    // a Download tap stamps ?go=1 and attempts a breakout (intent:// on
+    // Android, x-safari- on iOS). Only if the page is still visible 1.4s
+    // later (escape failed) does the guided overlay appear. "Open in
+    // browser" then reopens the stamped URL outside TikTok, where the head
+    // script forwards straight to the store.
     (function () {
       var ua = navigator.userAgent || '';
       var inTikTok = /musical_ly|bytedance|tiktok|trill/i.test(ua) || /[?&]iab=1/.test(location.search);
       if (!inTikTok) return;
-      var iab = document.getElementById('iab');
-      var card = document.getElementById('iabCard');
       var hint = document.getElementById('iabHint');
       var overlay = document.getElementById('iabOverlay');
       var cta = document.querySelector('.cta-row .store');
-      var mode = 'card';
+      var mode = 'none';
       var ctaTapped = 0;
       var escaped = false;
 
       function show(which) {
-        iab.classList.toggle('show', which === 'card');
+        mode = which;
         overlay.classList.toggle('show', which === 'overlay');
         hint.classList.toggle('show', which === 'hint');
       }
 
-      // Reopened mid-flow (Download already tapped): straight to the guide.
-      if (/[?&]go=1/.test(location.search)) mode = 'overlay';
-      show(mode);
+      // debug preview of the failure state: ?iab=1&go=1
+      if (/[?&]iab=1/.test(location.search) && /[?&]go=1/.test(location.search)) show('overlay');
 
       window.addEventListener('pagehide', function () { escaped = true; });
       document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'hidden') escaped = true;
-        else show(mode);
+        else if (mode === 'hint') show('overlay');
       });
 
       cta.addEventListener('click', function (e) {
@@ -606,26 +524,24 @@
           }
         } catch (err) {}
         setTimeout(function () {
-          if (!escaped && document.visibilityState === 'visible') {
-            mode = 'overlay';
-            show('overlay');
-          }
+          if (!escaped && document.visibilityState === 'visible') show('overlay');
         }, 1400);
       });
 
       // The native ... sheet steals focus while the page stays visible
-      // behind it: swap whatever is showing for the arrow at the sheet.
+      // behind it: point at its "Open in browser" row (guide mode only).
       window.addEventListener('blur', function () {
         escaped = true;
+        if (mode !== 'overlay') return;
         if (Date.now() - ctaTapped < 1000) return;
         if (document.visibilityState !== 'visible') return;
         show('hint');
       });
-      window.addEventListener('focus', function () { show(mode); });
+      window.addEventListener('focus', function () { if (mode === 'hint') show('overlay'); });
 
-      // backdrop tap dismisses the guide back to the small card
+      // backdrop tap dismisses the guide back to the plain page
       overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) { mode = 'card'; show('card'); }
+        if (e.target === overlay) show('none');
       });
     })();
   </script>
