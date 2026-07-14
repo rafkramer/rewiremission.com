@@ -21,6 +21,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add('js');</script>
+  <script>
+    // Arriving with ?go=1 outside TikTok's webview means the visitor tapped
+    // Download in TikTok and used "Open in browser": forward to the store
+    // immediately, before first paint. Keep URL in sync with the CTA href.
+    (function () {
+      if (/[?&]go=1/.test(location.search) && !/[?&]iab=1/.test(location.search) && !/musical_ly|bytedance|tiktok|trill/i.test(navigator.userAgent || '')) {
+        location.replace('https://appstack.link/NQfoYaEY?media_source=Influencers&campaign_name=%40archivedego+tiktok&campaign_id=6d12d76e-5670-403a-8f3d-cd1834f5b48c');
+      }
+    })();
+  </script>
   <style>
     :root {
       --bg: #13223F;
@@ -384,12 +394,61 @@
       from { opacity: 0; transform: translateY(-14px); }
       to { opacity: 1; transform: none; }
     }
-    @keyframes iabPulse {
-      0%, 100% { transform: scale(1); }
-      40% { transform: scale(1.05); }
+    /* guided flow after a blocked Download tap */
+    .iab-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 105;
+      display: none;
+      background: rgba(5, 10, 24, 0.72);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
     }
-    .iab .card.pulse { animation: iabPulse 0.5s ease; }
-
+    .iab-overlay.show { display: block; }
+    .iab-overlay .ocard {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.7rem;
+      max-width: min(22rem, calc(100vw - 1.4rem));
+      background: #182444;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      padding: 1.15rem 1.25rem 1.2rem;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6), 0 0 60px rgba(150, 170, 240, 0.12);
+      animation: iabIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .iab-overlay .ocard::before {
+      content: '';
+      position: absolute;
+      top: -6.5px;
+      right: 10px;
+      width: 12px;
+      height: 12px;
+      background: #182444;
+      border-left: 1px solid rgba(255, 255, 255, 0.18);
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      transform: rotate(45deg);
+    }
+    .iab-otitle {
+      font-size: 1.02rem;
+      font-weight: 500;
+      color: var(--ink-bright);
+      margin-bottom: 0.3rem;
+    }
+    .iab-osub {
+      font-size: 0.78rem;
+      font-weight: 300;
+      line-height: 1.55;
+      color: rgba(235, 235, 235, 0.6);
+      margin-bottom: 0.85rem;
+    }
+    .iab-onote {
+      margin-top: 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: rgba(134, 216, 223, 0.85);
+    }
+    /* arrow to the native sheet's Open in browser row */
     .iab-hint {
       position: fixed;
       left: 50%;
@@ -426,6 +485,11 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(12px); }
     }
+    @keyframes iabPulse {
+      0%, 100% { transform: scale(1); }
+      40% { transform: scale(1.05); }
+    }
+    .iab .card.pulse { animation: iabPulse 0.5s ease; }
   </style>
 </head>
 <body>
@@ -441,6 +505,16 @@
       <p class="iab-title">Download Rewire</p>
       <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button in the top right</span></div>
       <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
+    </div>
+  </div>
+
+  <div class="iab-overlay" id="iabOverlay" aria-hidden="true">
+    <div class="ocard">
+      <p class="iab-otitle">One more step</p>
+      <p class="iab-osub">TikTok blocked the App Store. Open this page in your browser instead:</p>
+      <div class="iab-step"><span class="n">1</span><span>Tap the <strong>&#8226;&#8226;&#8226;</strong> button in the top right</span></div>
+      <div class="iab-step"><span class="n">2</span><span>Choose <strong>Open in browser</strong></span></div>
+      <p class="iab-onote">The App Store opens automatically.</p>
     </div>
   </div>
 
@@ -479,9 +553,12 @@
   </script>
 
   <script>
-    // TikTok's webview blocks App Store navigations: show escape steps and
-    // try to break out to the real browser on tap (intent:// is reliable on
-    // Android; x-safari- works on some iOS versions, otherwise silent no-op).
+    // TikTok's webview blocks App Store navigations. Flow: on Download tap,
+    // stamp go=1 into the URL and attempt an automatic breakout (intent:// on
+    // Android, x-safari- on iOS). If the page is still visible 1.4s later the
+    // escape failed, so a guided overlay walks them to "Open in browser" -
+    // which reopens this URL outside TikTok, where go=1 (head script)
+    // forwards straight to the store.
     (function () {
       var ua = navigator.userAgent || '';
       var inTikTok = /musical_ly|bytedance|tiktok|trill/i.test(ua) || /[?&]iab=1/.test(location.search);
@@ -489,45 +566,66 @@
       var iab = document.getElementById('iab');
       var card = document.getElementById('iabCard');
       var hint = document.getElementById('iabHint');
-      iab.classList.add('show');
+      var overlay = document.getElementById('iabOverlay');
       var cta = document.querySelector('.cta-row .store');
+      var mode = 'card';
       var ctaTapped = 0;
+      var escaped = false;
+
+      function show(which) {
+        iab.classList.toggle('show', which === 'card');
+        overlay.classList.toggle('show', which === 'overlay');
+        hint.classList.toggle('show', which === 'hint');
+      }
+
+      // Reopened mid-flow (Download already tapped): straight to the guide.
+      if (/[?&]go=1/.test(location.search)) mode = 'overlay';
+      show(mode);
+
+      window.addEventListener('pagehide', function () { escaped = true; });
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden') escaped = true;
+        else show(mode);
+      });
+
       cta.addEventListener('click', function (e) {
         e.preventDefault();
         ctaTapped = Date.now();
+        escaped = false;
+        // Carry intent in the URL: TikTok's "Open in browser" reopens this
+        // exact URL, and go=1 outside the webview forwards to the store.
+        if (!/[?&]go=1/.test(location.search)) {
+          history.replaceState(null, '', location.pathname + (location.search ? location.search + '&go=1' : '?go=1') + location.hash);
+        }
         var url = cta.href;
         try {
           if (/android/i.test(ua)) {
-            location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;end';
+            location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(url) + ';end';
           } else {
             location.href = 'x-safari-' + url;
           }
         } catch (err) {}
         setTimeout(function () {
-          if (document.visibilityState === 'visible') {
-            card.classList.remove('pulse');
-            void card.offsetWidth;
-            card.classList.add('pulse');
+          if (!escaped && document.visibilityState === 'visible') {
+            mode = 'overlay';
+            show('overlay');
           }
-        }, 1200);
+        }, 1400);
       });
-      // TikTok's ... menu is native UI, invisible to the page - but opening
-      // it steals focus from the webview while the page stays visible behind
-      // the dimmed sheet. Use blur as the signal to swap the card for a
-      // bottom arrow pointing at the sheet's "Open in browser" row.
+
+      // The native ... sheet steals focus while the page stays visible
+      // behind it: swap whatever is showing for the arrow at the sheet.
       window.addEventListener('blur', function () {
+        escaped = true;
         if (Date.now() - ctaTapped < 1000) return;
         if (document.visibilityState !== 'visible') return;
-        iab.classList.remove('show');
-        hint.classList.add('show');
+        show('hint');
       });
-      function sheetClosed() {
-        hint.classList.remove('show');
-        iab.classList.add('show');
-      }
-      window.addEventListener('focus', sheetClosed);
-      document.addEventListener('visibilitychange', function () {
-        if (document.visibilityState === 'visible') sheetClosed();
+      window.addEventListener('focus', function () { show(mode); });
+
+      // backdrop tap dismisses the guide back to the small card
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) { mode = 'card'; show('card'); }
       });
     })();
   </script>
