@@ -340,16 +340,6 @@
       backdrop-filter: blur(9px);
     }
     .iab-overlay.show { display: block; }
-    .iab-up {
-      position: absolute;
-      top: 0.5rem;
-      right: 1.7rem;
-      width: 48px;
-      height: 86px;
-      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
-      animation: iabBounceUp 1.1s ease-in-out infinite;
-    }
-    .iab-up svg { display: block; width: 100%; height: 100%; }
     .iab-steps {
       position: absolute;
       left: 50%;
@@ -473,10 +463,6 @@
       8% { transform: scale(1.02); }
       45%, 100% { box-shadow: 0 0 0 16px rgba(254, 44, 85, 0); transform: scale(1); }
     }
-    @keyframes iabBounceUp {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(2px, -8px); }
-    }
     @keyframes iabIn {
       from { opacity: 0; transform: translate(-50%, -50%) translateY(14px); }
       to { opacity: 1; transform: translate(-50%, -50%); }
@@ -527,7 +513,6 @@
   <a class="corner contact" href="mailto:team@rewiremission.com">Contact</a>
 
   <div class="iab-overlay" id="iabOverlay" aria-hidden="true">
-    <div class="iab-up" aria-hidden="true"><svg viewBox="0 0 48 86" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 78 L30 13"/><path d="M18.5 28 L30 13 L36.5 31"/></svg></div>
     <p class="iab-htitle"><b>Almost there!</b><span>Please open in browser.</span></p>
     <div class="iab-steps">
       <div class="iab-lbl"><span class="n">1</span><span>Tap <strong>&#8226;&#8226;&#8226;</strong></span></div>
